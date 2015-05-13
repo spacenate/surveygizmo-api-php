@@ -1,0 +1,17 @@
+{
+    "name":             "spacenate/SurveyGizmoApiWrapper",
+    "description":      "SurveyGizmo RESTful API Wrapper.",
+    "keywords":         ["SurveyGizmo","API","REST","Wrapper"],
+    "homepage":         "http://github.com/spacenate/SurveyGizmoApiWrapper",
+    "authors": [
+        {
+            "name":         "Nathan Sollenberger",
+            "email":        "nsollenberger@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/SurveyGizmoApiWrapper.php"
+        ]
+    }
+}
