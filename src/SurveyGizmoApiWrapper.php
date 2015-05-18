@@ -3,7 +3,7 @@
  * SurveyGizmo REST API wrapper
  *
  * @package surveygizmo-api-php
- * @version 0.1
+ * @version 0.2
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate;
@@ -25,7 +25,7 @@ class SurveyGizmoApiWrapper
     private $auth_type;
     private $domain;
     private $version;
-    private $return_assoc;
+    private $format;
     private $ch;
     private $debug;
 
@@ -58,8 +58,11 @@ class SurveyGizmoApiWrapper
         if (isset($opts['debug']) && $opts['debug']) {
             $this->debug = true;
         }
-        if (isset($opts['assoc']) && $opts['assoc']) {
-            $this->return_assoc = true;
+        if (isset($opts['format']) && in_array($opts['format'], array("json", "pson", "xml", "debug"))) {
+            $this->format = $opts['format'];
+        }
+        else {
+            $this->format = "json";
         }
 
         $this->ch = curl_init();
@@ -123,15 +126,26 @@ class SurveyGizmoApiWrapper
      */
     public function testCredentials()
     {
-		$_params = http_build_query(array('page'=>1,'resultsperpage'=>0));
-        $output = $this->call('survey', 'GET', $_params);
+        $_params = http_build_query(array('page'=>1,'resultsperpage'=>0));
+        $output = json_decode($this->call('survey', 'GET', $_params, 'json'));
 
-        if ( (isset($output->result_ok) && $output->result_ok) ||
-             (is_array($output) && isset($output['result_ok']) && $output['result_ok']) ) {
+        if (isset($output->result_ok) && $output->result_ok) {
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    /**
+     * Set the return format to JSON, PSON, XML, or debug
+     *
+     * @param format string "json", "pson", "xml", or "debug"
+     */
+    public function setFormat( $format )
+    {
+        if (in_array($opts['format'], array("json", "pson", "xml", "debug"))) {
+            $this->format = $opts['format'];
         }
     }
 
@@ -163,14 +177,15 @@ class SurveyGizmoApiWrapper
         return implode("&", $return);
     }
 
-    public function call($endPoint, $method = "GET", $params = "") {
-
+    public function call($endPoint, $method = "GET", $params = "", $format = "")
+    {
         $creds  = $this->getCredentials();
         if (!$creds) return false;
+
         $ch     = $this->ch;
-        $url    = "https://{$this->domain}/{$this->version}/" . $endPoint
-                . '.json?_method=' . $method
-                . '&' . $creds;
+        $format = in_array($format, array("json", "pson", "xml", "debug")) ? $format : $this->format;
+        $url    = "https://{$this->domain}/{$this->version}/{$endPoint}"
+                . ".{$format}?_method={$method}&{$creds}";
         if ($params) $url .= '&' . $params;
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -198,14 +213,12 @@ class SurveyGizmoApiWrapper
         if(curl_error($ch)) {
             throw new Exception("API call to $url failed: " . curl_error($ch));
         }
-        $assoc = ($this->return_assoc) ? 1 : 0;
-        $result = json_decode($response_body, $assoc);
 
         if(floor($info['http_code'] / 100) >= 4) {
-            throw $this->castError($result);
+            throw new Exception($result); //$this->castError($result);
         }
 
-        return $result;
+        return $response_body;
     }
 
     public function log( $msg )
