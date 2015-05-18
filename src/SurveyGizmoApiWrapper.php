@@ -124,10 +124,10 @@ class SurveyGizmoApiWrapper
     public function testCredentials()
     {
 		$_params = http_build_query(array('page'=>1,'resultsperpage'=>0));
-        $output = $this->call('accountuser', 'GET', $_params);
+        $output = $this->call('survey', 'GET', $_params);
 
         if ( (isset($output->result_ok) && $output->result_ok) ||
-             (isset($output['result_ok']) && $output['result_ok']) ) {
+             (is_array($output) && isset($output['result_ok']) && $output['result_ok']) ) {
             return true;
         }
         else {
