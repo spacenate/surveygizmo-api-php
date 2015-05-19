@@ -9,7 +9,9 @@
 namespace spacenate;
 
 require_once 'SurveyGizmo/Survey.php';
+require_once 'SurveyGizmo/SurveyPage.php';
 require_once 'SurveyGizmo/SurveyQuestion.php';
+require_once 'SurveyGizmo/SurveyOption.php';
 
 /**
  * SurveyGizmoApiWrapper class accepts credentials and allows
@@ -75,7 +77,9 @@ class SurveyGizmoApiWrapper
         curl_setopt($this->ch, CURLOPT_TIMEOUT, $opts['timeout']);
 
         $this->surveys = new SurveyGizmo\Survey($this);
+		$this->pages = $this->surveypages = new SurveyGizmo\SurveyPage($this);
         $this->questions = $this->surveyquestions = new SurveyGizmo\SurveyQuestion($this);
+		$this->options = $this->surveyoptions = new SurveyGizmo\SurveyOption($this);
     }
 
     /**

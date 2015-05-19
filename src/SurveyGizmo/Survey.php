@@ -44,5 +44,28 @@ class Survey
         return $this->master->call('survey/' . $surveyId, 'GET');
     }
 	
+	/**
+	 * Create a new survey
+	 *
+	 * @param title string title of new survey
+	 * @param type string type of new survey
+	 * @param parameters array key-value pairs of additional parameters
+	 */
+	public function createSurvey( $title, $type, $parameters = array() )
+	{
+		$parameters["title"] = $title;
+		$parameters["type"] = $type;
+		$allowed_params = array
+		("title", "type", "status", "theme", "team", "options[internal_title]", "blockby", "polloptions", "polltype", "pollwidth");
+		
+		foreach ($parameters as $key => $value) {
+			if(!in_array($key, $allowed_params)) {
+				unset($parameters[$key]);
+			}
+		}
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/', 'PUT', $_params);
+	}
+	
 }
 

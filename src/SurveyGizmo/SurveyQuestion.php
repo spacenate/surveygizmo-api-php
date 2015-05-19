@@ -42,5 +42,26 @@ class SurveyQuestion
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId, 'GET');
     }
 	
+	/**
+	 * Create a new question
+	 *
+	 * @param surveyId string|int survey to create new question in
+	 * @param pageId string|int page to put new question in
+	 * @param parameters array key-value pairs of additional parameters
+	 */
+	public function createQuestion( $surveyId, $pageId, $parameters = array() )
+	{
+		$allowed_params = array
+		("type", "title", "description", "after", "varname", "shortname", "properties[disabled]", "properties[exclude_number]", "properties[hide_after_response]", "properties[option_sort]", "properties[orientation]", "properties[labels_right]", "properties[question_description_above]", "properties[custom_css]");
+		
+		foreach ($parameters as $key => $value) {
+			if(!in_array($key, $allowed_params)) {
+				unset($parameters[$key]);
+			}
+		}
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion', 'PUT', $_params);
+	}
+	
 }
 
