@@ -1,19 +1,19 @@
 # SurveyGizmoApiWrapper
-PHP wrapper for the SurveyGizmo RESTful API
+PHP wrapper for the SurveyGizmo REST API
 
 ## Installing with Composer:
 
-{
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/spacenate/SurveyGizmoApiWrapper"
-        }
-    ],
-    "require": {
-        "spacenate/SurveyGizmoApiWrapper": "dev-master"
-    }
-}
+	{
+	    "repositories": [
+	        {
+	            "type": "git",
+	            "url": "https://github.com/spacenate/SurveyGizmoApiWrapper"
+	        }
+	    ],
+	    "require": {
+	        "spacenate/SurveyGizmoApiWrapper": "dev-master"
+	    }
+	}
 
 ## Objects
 
@@ -33,9 +33,9 @@ Survey
 
 Surveys are the heart-and-soul of SurveyGizmo (obviously). Surveys come in four flavors in SurveyGizmo: Surveys, Polls, Quizzes and Forms. For the purposes of the API all of these sub-types are accessed via the Survey object. There are a few things to keep in mind about the Survey object:
 
-    Surveys are essentially collection of SurveyPages and SurveyQuestions
-    All Surveys (except Polls) have at least two pages.
-    Terminal pages are pages that flag a survey as complete and do not allow the respondent to move back in the survey.
+- Surveys are essentially collection of SurveyPages and SurveyQuestions
+- All Surveys (except Polls) have at least two pages.
+- Terminal pages are pages that flag a survey as complete and do not allow the respondent to move back in the survey.
 
 SurveyResponse
 

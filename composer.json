@@ -1,12 +1,13 @@
 {
-    "name":             "spacenate/SurveyGizmoApiWrapper",
-    "description":      "SurveyGizmo RESTful API Wrapper.",
-    "keywords":         ["SurveyGizmo","API","REST","Wrapper"],
-    "homepage":         "http://github.com/spacenate/surveygizmo-api-php",
+    "name": "spacenate/surveygizmo-api-php",
+    "description": "PHP wrapper for SurveyGizmo REST API",
+    "require": {
+        "themattharris/tmhoauth": "0.8.*"
+    },
     "authors": [
         {
-            "name":         "Nathan Sollenberger",
-            "email":        "nsollenberger@gmail.com"
+            "name": "Nathan Sollenberger",
+            "email": "nsollenberger@gmail.com"
         }
     ],
     "autoload": {
