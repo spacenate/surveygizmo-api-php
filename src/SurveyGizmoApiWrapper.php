@@ -38,13 +38,13 @@ class SurveyGizmoApiWrapper
      * @param string $email (optional) email address to authenticate with
      * @param string $password (optional) md5 or plaintext password to authenticate with
      * @param string $auth_type (optional) which auth type to use, "md5" or "pass"
-     * @param array $opts (optional) key=>value array using one or more of the following keys:
-     *        - timeout int connection timeout limit
-     *        - debug bool enable debug logging
-     *        - version string either head, v3, or v4
-     *        - domain string domain name to make api calls against
+     * @param array $opts (optional) key-value pairs of one or more of the following keys:
+     *        - "timeout" int connection timeout limit
+     *        - "debug" bool enable debug logging
+     *        - "version" string either head, v3, or v4
+     *        - "domain" string domain name to make api calls against
      */
-	// @todo move all options to config array
+    // @todo move all options to config array
     public function __construct( $email = "", $password = "", $auth_type = "pass", $opts = array() )
     {
         if ($email && $password) {
@@ -78,16 +78,16 @@ class SurveyGizmoApiWrapper
         curl_setopt($this->ch, CURLOPT_TIMEOUT, $opts['timeout']);
 
         $this->surveys = new SurveyGizmo\Survey($this);
-		$this->pages = $this->surveypages = new SurveyGizmo\SurveyPage($this);
+        $this->pages = $this->surveypages = new SurveyGizmo\SurveyPage($this);
         $this->questions = $this->surveyquestions = new SurveyGizmo\SurveyQuestion($this);
-		$this->options = $this->surveyoptions = new SurveyGizmo\SurveyOption($this);
-		
-		$oauth_config = array
-		(
-	        'user_agent'                 => 'SurveyGizmo-API-PHP/0.0.3',
-	        'host'                       => 'restapi.surveygizmo.com/' . $this->version
-		);
-		$this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
+        $this->options = $this->surveyoptions = new SurveyGizmo\SurveyOption($this);
+
+        $oauth_config = array
+        (
+            'user_agent'                 => 'SurveyGizmo-API-PHP/0.0.3',
+            'host'                       => 'restapi.surveygizmo.com/' . $this->version
+        );
+        $this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
     }
 
     /**
@@ -112,11 +112,17 @@ class SurveyGizmoApiWrapper
         $this->password = $password;
         $this->auth_type = $auth_type;
     }
-	
-	public function setAuthTypeOAuth()
-	{
-		$this->auth_type = "oauth";
-	}
+
+    /**
+     * Authenticate using OAuth
+     *
+     * A validated Access Token and Token Secret must be set first
+     * using astronate\SurveyGizmo\OAuth::setTokenAndSecret()
+     */
+    public function setAuthTypeOAuth()
+    {
+        $this->auth_type = "oauth";
+    }
 
     /**
      * Get credential parameter string
@@ -127,8 +133,8 @@ class SurveyGizmoApiWrapper
     {
         if (isset($this->email) && isset($this->password)) {
             switch ($this->auth_type) {
-				case "oauth":
-					return false;
+                case "oauth":
+                    return false;
                 case "md5":
                     return "user:md5=" . $this->email . ":" . $this->password;
                 default:
@@ -145,15 +151,15 @@ class SurveyGizmoApiWrapper
      */
     public function testCredentials()
     {
-		$params = array('page'=>1,'resultsperpage'=>0);
-		if ($this->auth_type === "oauth") {
-			$this->oauth->request("GET", "https://{$this->domain}/{$this->version}/survey", $params);
-			$output = $this->oauth->response['response'];
-		} else {
-	        $params = http_build_query($params);
-	        $output = $this->call('survey', 'GET', $params, 'json');
-		}
-		$output = json_decode($output);
+        $params = array('page'=>1,'resultsperpage'=>0);
+        if ($this->auth_type === "oauth") {
+            $this->oauth->request("GET", "https://{$this->domain}/{$this->version}/survey", $params);
+            $output = $this->oauth->response['response'];
+        } else {
+            $params = http_build_query($params);
+            $output = $this->call('survey', 'GET', $params, 'json');
+        }
+        $output = json_decode($output);
         if (isset($output->result_ok) && $output->result_ok) {
             return true;
         }
@@ -202,28 +208,28 @@ class SurveyGizmoApiWrapper
         return implode("&", $return);
     }
 
-	/**
-	 * Sends HTTP request using $method to specified $endPoint
-	 *
-	 * @param string $endPoint path to append to (base url+version)
-	 * @param string $method (optional) HTTP method to use
-	 * @param string $params (optional) query string formatted parameters
-	 * @param string $format (optional) format to request
-	 * @return SG API object
-	 */
+    /**
+     * Sends HTTP request using $method to specified $endPoint
+     *
+     * @param string $endPoint path to append to (base url+version)
+     * @param string $method (optional) HTTP method to use
+     * @param string $params (optional) query string formatted parameters
+     * @param string $format (optional) format to request
+     * @return SG API object
+     */
     public function call($endPoint, $method = "GET", $params = "", $format = "")
     {
         $format = in_array($format, array("json", "pson", "xml", "debug")) ? $format : $this->format;
         $url    = "https://{$this->domain}/{$this->version}/{$endPoint}.{$format}";
-		
-		if ($this->auth_type === "oauth") {
-			$this->log("Using OAuth");
-			// turn query string in to key=>value array
-			parse_str($params, $params);
-			$this->oauth->request($method, $url, $params);
-			return $this->oauth->response['response'];
-		}
-		
+
+        if ($this->auth_type === "oauth") {
+            $this->log("Using OAuth");
+            // turn query string in to key=>value array
+            parse_str($params, $params);
+            $this->oauth->request($method, $url, $params);
+            return $this->oauth->response['response'];
+        }
+
         $creds  = $this->getCredentials();
         if (!$creds) return false;
 
@@ -264,11 +270,17 @@ class SurveyGizmoApiWrapper
         return $response_body;
     }
 
+    /**
+     * Prints log messages if $this->debug is true
+     *
+     * Will most likely end up delegating the actual task of logging to some externally provided logger
+	 * 
+	 * @param string $msg message to log
+     */
     public function log( $msg )
     {
         if ($this->debug)
             print $msg . "\n";
     }
-
 }
 
