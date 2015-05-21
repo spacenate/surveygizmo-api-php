@@ -12,7 +12,7 @@ use spacenate\SurveyGizmoApiWrapper;
 use tmhOAuth;
 
 /**
- * OAuth class extends tmhOAuth\tmhOAuth, providing some convenience methods for
+ * OAuth class extends themattharris/tmhOAuth, providing some convenience methods for
  * interacting with the SurveyGizmo OAuth service
  *
  * @package surveygizmo-api-php

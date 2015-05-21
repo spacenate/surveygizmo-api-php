@@ -11,8 +11,7 @@ namespace spacenate\SurveyGizmo;
 use spacenate\SurveyGizmoApiWrapper;
 
 /**
- * OAuth class extends tmhOAuth\tmhOAuth, providing some convenience methods for
- * interacting with the SurveyGizmo OAuth service
+ * SurveyQuestion class provides access to the SurveyQuestion object
  *
  * @package surveygizmo-api-php
  */
