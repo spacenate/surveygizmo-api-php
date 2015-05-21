@@ -7,11 +7,11 @@ PHP wrapper for the SurveyGizmo REST API
 	    "repositories": [
 	        {
 	            "type": "git",
-	            "url": "https://github.com/spacenate/SurveyGizmoApiWrapper"
+	            "url": "https://github.com/spacenate/surveygizmo-api-php"
 	        }
 	    ],
 	    "require": {
-	        "spacenate/SurveyGizmoApiWrapper": "dev-master"
+	        "spacenate/surveygizmo-api-php": "dev-master"
 	    }
 	}
 
