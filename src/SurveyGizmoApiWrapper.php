@@ -102,15 +102,20 @@ class SurveyGizmoApiWrapper
     /**
      * Specify the credentials to use when connecting to the API
      *
-     * @param string $email email address to authenticate with
-     * @param string $password md5 or plaintext password to authenticate with
-     * @param string $auth_type (optional) which auth type to use, "md5" or "pass". Defaults to "pass"
+     * @param string $email email address (or Access Token) to authenticate with
+     * @param string $password md5 or plaintext password (or Access Token Secret) to authenticate with
+     * @param string $auth_type (optional) which auth type to use, "md5", "pass", or "oauth". Defaults to "pass"
      */
     public function setCredentials( $email, $password, $auth_type = "pass" )
     {
-        $this->email = $email;
-        $this->password = $password;
-        $this->auth_type = $auth_type;
+        if ("oauth" === $auth_type) {
+            $this->oauth->setTokenAndSecret($email, $password);
+            // setTokenAndSecret also sets auth_type
+        } else {
+            $this->email = $email;
+            $this->password = $password;
+            $this->auth_type = $auth_type;
+        }
     }
 
     /**
@@ -274,8 +279,8 @@ class SurveyGizmoApiWrapper
      * Prints log messages if $this->debug is true
      *
      * Will most likely end up delegating the actual task of logging to some externally provided logger
-	 * 
-	 * @param string $msg message to log
+     * 
+     * @param string $msg message to log
      */
     public function log( $msg )
     {
