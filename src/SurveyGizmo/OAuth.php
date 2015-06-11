@@ -54,7 +54,6 @@ class OAuth extends tmhOAuth
 	 *         - "oauth_token_secret" (not used?)
 	 *         - "xoauth_token_ttl"
      */
-    // @todo store oauth_token in session
 	// @todo ensure returned errors are consistent across wrapper
     public function getRequestToken()
     {
@@ -84,7 +83,6 @@ class OAuth extends tmhOAuth
 	 *         - "oauth_token" Access Token
 	 *         - "oauth_token_secret" Access Token Secret
      */
-    // @todo verify @oauth_token matches stored token
     public function getAccessToken($oauth_token, $oauth_verifier)
     {
         $code = $this->user_request(array(
@@ -106,6 +104,7 @@ class OAuth extends tmhOAuth
 	 *
 	 * @param string $oauth_token Access Token received after completing step three of OAuth process
 	 * @param string $oauth_token_secret Access Token Secret received after completing step three of OAuth process
+	 * @param bool token and secret successfully set
      */
     public function setTokenAndSecret( $oauth_token, $oauth_token_secret )
     {
@@ -114,6 +113,7 @@ class OAuth extends tmhOAuth
             "secret" => $oauth_token_secret
         )));
         $this->master->setAuthTypeOAuth();
+		return true;
     }
 }
 

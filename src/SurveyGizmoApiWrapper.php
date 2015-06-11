@@ -44,13 +44,11 @@ class SurveyGizmoApiWrapper
      *        - "version" string either head, v3, or v4
      *        - "domain" string domain name to make api calls against
      */
-    // @todo move all options to config array
+    // @todo move all options to config array, with logic in its own method!
     public function __construct( $email = "", $password = "", $auth_type = "pass", $opts = array() )
     {
         if ($email && $password) {
-            $this->email = $email;
-            $this->password = $password;
-            $this->auth_type = $auth_type;
+            $this->setCredentials($email, $password, $auth_type);
         }
 
         $this->domain = (!isset($opts['domain']) || !is_string($opts['domain'])) ? "restapi.surveygizmo.com" : $opts['domain'];
@@ -71,7 +69,7 @@ class SurveyGizmoApiWrapper
 
         $this->ch = curl_init();
 
-        curl_setopt($this->ch, CURLOPT_USERAGENT, 'SurveyGizmo-API-PHP/0.0.3');
+        curl_setopt($this->ch, CURLOPT_USERAGENT, 'SurveyGizmo-API-PHP/0.3');
         curl_setopt($this->ch, CURLOPT_HEADER, false);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -84,7 +82,7 @@ class SurveyGizmoApiWrapper
 
         $oauth_config = array
         (
-            'user_agent'                 => 'SurveyGizmo-API-PHP/0.0.3',
+            'user_agent'                 => 'SurveyGizmo-API-PHP/0.3',
             'host'                       => 'restapi.surveygizmo.com/' . $this->version
         );
         $this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
@@ -105,16 +103,21 @@ class SurveyGizmoApiWrapper
      * @param string $email email address (or Access Token) to authenticate with
      * @param string $password md5 or plaintext password (or Access Token Secret) to authenticate with
      * @param string $auth_type (optional) which auth type to use, "md5", "pass", or "oauth". Defaults to "pass"
+	 * @return bool credentials set successfully
      */
     public function setCredentials( $email, $password, $auth_type = "pass" )
     {
+		if (!in_array($auth_type, array("md5", "pass", "oauth"))) {
+			return false;
+		}
         if ("oauth" === $auth_type) {
-            $this->oauth->setTokenAndSecret($email, $password);
+            return $this->oauth->setTokenAndSecret($email, $password);
             // setTokenAndSecret also sets auth_type
         } else {
             $this->email = $email;
             $this->password = $password;
             $this->auth_type = $auth_type;
+			return true;
         }
     }
 
@@ -123,6 +126,8 @@ class SurveyGizmoApiWrapper
      *
      * A validated Access Token and Token Secret must be set first
      * using astronate\SurveyGizmo\OAuth::setTokenAndSecret()
+	 *
+	 * @return null
      */
     public function setAuthTypeOAuth()
     {
@@ -152,7 +157,7 @@ class SurveyGizmoApiWrapper
     /**
      * Attempts to authenticate the supplied plaintext/md5 or oauth credentials
      *
-     * @return bool whether redentials authenticated
+     * @return bool credentials authenticated successfully
      */
     public function testCredentials()
     {
@@ -177,12 +182,15 @@ class SurveyGizmoApiWrapper
      * Set the return format to JSON, PSON, XML, or debug
      *
      * @param string $format either "json", "pson", "xml", or "debug"
+	 * @return bool format set successfully
      */
     public function setFormat( $format )
     {
-        if (in_array($opts['format'], array("json", "pson", "xml", "debug"))) {
-            $this->format = $opts['format'];
+        if (in_array($format, array("json", "pson", "xml", "debug"))) {
+            $this->format = $format;
+			return true;
         }
+		else return false;
     }
 
     /**
