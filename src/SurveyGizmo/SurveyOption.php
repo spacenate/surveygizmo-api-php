@@ -49,5 +49,68 @@ class SurveyOption
     {
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSku, 'GET');
     }
+	
+    /**
+     * Create a new question option
+     *
+     * @param string|int $surveyId Id of survey containing question
+     * @param string|int $pageId Id of page containing question
+     * @param string|int $questionId Id of question to receive new option
+	 * @param string $title Title for new option
+	 * @param string $value Reporting value for new option
+     * @param array $parameters (optional) key-value pairs of additional parameters
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function createOption( $surveyId, $pageId, $questionId, $title, $value, $parameters = array() )
+    {
+        $parameters["title"] = $title;
+        $parameters["value"] = $value;
+        $allowed_params = array
+        ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
+
+        foreach ($parameters as $key => $value) {
+            if(!in_array($key, $allowed_params)) {
+                unset($parameters[$key]);
+            }
+        }
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion/' . $questionId . '/surveyoption/', 'PUT', $_params);
+    }
+	
+    /**
+     * Update a specified question option
+     *
+     * @param string|int $surveyId Id of survey containing question
+     * @param string|int $questionId Id of question containing option
+	 * @param string|int $optionSKU SKU of option to update
+     * @param array $parameters (optional) key-value pairs of additional parameters
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function updateOption( $surveyId, $questionId, $optionSKU, $parameters = array() )
+    {
+        $allowed_params = array
+        ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
+
+        foreach ($parameters as $key => $value) {
+            if(!in_array($key, $allowed_params)) {
+                unset($parameters[$key]);
+            }
+        }
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSKU, 'POST', $_params);
+    }
+	
+    /**
+     * Delete a specified question option
+     *
+     * @param string|int $surveyId Id of survey containing question
+     * @param string|int $questionId Id of question containing option
+	 * @param string|int $optionSKU SKU of option to delete
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function deleteOption( $surveyId, $questionId, $optionSKU )
+    {
+        return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSKU, 'DELETE');
+    }
 }
 

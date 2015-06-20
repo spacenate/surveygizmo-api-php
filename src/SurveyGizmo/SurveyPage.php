@@ -46,5 +46,62 @@ class SurveyPage
     {
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'GET');
     }
+	
+    /**
+     * Create a new page
+     *
+     * @param string|int $surveyId Id of survey to receive new page
+	 * @param string $title Title for new page
+     * @param array $parameters (optional) key-value pairs of additional parameters
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function createPage( $surveyId, $title, $parameters = array() )
+    {
+        $parameters["title"] = $title;
+        $allowed_params = array
+        ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
+
+        foreach ($parameters as $key => $value) {
+            if(!in_array($key, $allowed_params)) {
+                unset($parameters[$key]);
+            }
+        }
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/' . $surveyId . '/surveypage/', 'PUT', $_params);
+    }
+	
+    /**
+     * Update a specified page
+     *
+     * @param string|int $surveyId Id of survey containing page
+	 * @param string $pageId Id of page to update
+     * @param array $parameters (optional) key-value pairs of additional parameters
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function updatePage( $surveyId, $pageId, $parameters = array() )
+    {
+        $allowed_params = array
+        ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
+
+        foreach ($parameters as $key => $value) {
+            if(!in_array($key, $allowed_params)) {
+                unset($parameters[$key]);
+            }
+        }
+        $_params = http_build_query($parameters);
+        return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'POST', $_params);
+    }
+	
+    /**
+     * Delete a specified page
+     *
+     * @param string|int $surveyId Id of survey containing page
+     * @param string|int $pageId Id of page to delete
+     * @return string SG API object according to format specified in SurveyGizmoApiWrapper
+     */
+    public function deletePage( $surveyId, $pageId )
+    {
+        return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'DELETE');
+    }
 }
 
