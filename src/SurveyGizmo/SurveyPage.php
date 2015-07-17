@@ -3,7 +3,7 @@
  * SurveyPage Object
  *
  * @package surveygizmo-api-php
- * @version 0.3
+ * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
@@ -61,12 +61,7 @@ class SurveyPage
         $allowed_params = array
         ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/', 'PUT', $_params);
     }
 	
@@ -83,12 +78,7 @@ class SurveyPage
         $allowed_params = array
         ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'POST', $_params);
     }
 	

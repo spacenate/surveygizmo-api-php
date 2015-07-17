@@ -3,7 +3,7 @@
  * SurveyGizmo REST API wrapper
  *
  * @package surveygizmo-api-php
- * @version 0.3
+ * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate;
@@ -103,13 +103,13 @@ class SurveyGizmoApiWrapper
      * @param string $email email address (or Access Token) to authenticate with
      * @param string $password md5 or plaintext password (or Access Token Secret) to authenticate with
      * @param string $auth_type (optional) which auth type to use, "md5", "pass", or "oauth". Defaults to "pass"
-	 * @return bool credentials set successfully
+     * @return bool credentials set successfully
      */
     public function setCredentials( $email, $password, $auth_type = "pass" )
     {
-		if (!in_array($auth_type, array("md5", "pass", "oauth"))) {
-			return false;
-		}
+        if (!in_array($auth_type, array("md5", "pass", "oauth"))) {
+            return false;
+        }
         if ("oauth" === $auth_type) {
             return $this->oauth->setTokenAndSecret($email, $password);
             // setTokenAndSecret also sets auth_type
@@ -117,7 +117,7 @@ class SurveyGizmoApiWrapper
             $this->email = $email;
             $this->password = $password;
             $this->auth_type = $auth_type;
-			return true;
+            return true;
         }
     }
 
@@ -126,8 +126,8 @@ class SurveyGizmoApiWrapper
      *
      * A validated Access Token and Token Secret must be set first
      * using astronate\SurveyGizmo\OAuth::setTokenAndSecret()
-	 *
-	 * @return null
+     *
+     * @return null
      */
     public function setAuthTypeOAuth()
     {
@@ -182,15 +182,15 @@ class SurveyGizmoApiWrapper
      * Set the return format to JSON, PSON, XML, or debug
      *
      * @param string $format either "json", "pson", "xml", or "debug"
-	 * @return bool format set successfully
+     * @return bool format set successfully
      */
     public function setFormat( $format )
     {
         if (in_array($format, array("json", "pson", "xml", "debug"))) {
             $this->format = $format;
-			return true;
+            return true;
         }
-		else return false;
+        else return false;
     }
 
     /**
@@ -222,15 +222,44 @@ class SurveyGizmoApiWrapper
     }
 
     /**
+     * Filter an array of paramaters
+     *
+     * @param array $params array of paramaters to filter
+     * @param array $allowed array of allowed parameter keys
+     * @param array $allowed_regxp (optional) array of allowed parameter key Regular Expressions
+     * @return array Filtered array of valid paramaters
+     */
+    public function getValidParameters( $params, $allowed, $allowed_regxp = array() )
+    {
+        if (!is_array($params) || count($params) === 0)
+            return array();
+
+        foreach ($params as $key => $value) {
+            if(!is_string($key) || !in_array($key, $allowed)) {
+                // key was not found in $allowed, check regex patterns
+                foreach ($allowed_regxp as $pattern) {
+                    if (preg_match($pattern, $key)) {
+                        // matched a pattern! break out of the $allowed_regxp foreach
+                        // and continue with the next key in the $params foreach
+                        continue 2;
+                    }
+                }
+                unset($params[$key]);
+            }
+        }
+        return $params;
+    }
+
+    /**
      * Sends HTTP request using $method to specified $endPoint
      *
      * @param string $endPoint path to append to (base url+version)
      * @param string $method (optional) HTTP method to use
      * @param string $params (optional) query string formatted parameters
      * @param string $format (optional) format to request
-     * @return SG API object
+     * @return string SG API object
      */
-    public function call($endPoint, $method = "GET", $params = "", $format = "")
+    public function call( $endPoint, $method = "GET", $params = "", $format = "" )
     {
         $format = in_array($format, array("json", "pson", "xml", "debug")) ? $format : $this->format;
         $url    = "https://{$this->domain}/{$this->version}/{$endPoint}.{$format}";
@@ -287,7 +316,7 @@ class SurveyGizmoApiWrapper
      * Prints log messages if $this->debug is true
      *
      * Will most likely end up delegating the actual task of logging to some externally provided logger
-     * 
+     *
      * @param string $msg message to log
      */
     public function log( $msg )

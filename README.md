@@ -50,7 +50,7 @@ To use OAuth, you'll first need to provide an OAuth key, secret, and callback UR
         'oauth_callback'  => 'https://example.com'
     );
 	
-    // Access OAuth object's configure() method to add OAuth configuration
+    // Use OAuth object's configure() method to add OAuth configuration
     $sg->oauth->configure($oauth_config);
 
 To obtain an access token, begin by getting a request token and directing the user to SurveyGizmo's Authorize page.

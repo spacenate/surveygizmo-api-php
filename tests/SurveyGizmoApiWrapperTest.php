@@ -104,4 +104,66 @@ class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("filter[field][0]=createdon&filter[operator][0]=>&filter[value][0]=2015-05-15+12:00:00&filter[field][1]=status&filter[operator][1]==&filter[value][1]=Launched", $result);
     }
 
+    public function testGetValidParametersByKey()
+    {
+        $sg = new SurveyGizmoApiWrapper();
+
+        $params = array(
+            "meow" => "meow meow meow",
+            "woof" => "woof woof woof"
+        );
+        $allowed = array("meow", "woof");
+
+        $result = $sg->getValidParameters($params, $allowed);
+        $this->assertEquals($params, $result);
+    }
+
+    public function testFilterOutInvalidParametersByKey()
+    {
+        $sg = new SurveyGizmoApiWrapper();
+
+        $params = array(
+            "meow" => "meow meow meow",
+            "woof" => "woof woof woof",
+            "hiss" => "ssss sssss sss",
+            false => "nope",
+            2 => 9000
+        );
+        $allowed = array("meow", "woof");
+
+        $result = $sg->getValidParameters($params, $allowed);
+        $this->assertEquals(array("meow" => "meow meow meow", "woof" => "woof woof woof"), $result);
+    }
+
+    public function testGetValidParametersByRegxp()
+    {
+        $sg = new SurveyGizmoApiWrapper();
+
+        $params = array(
+            "meow" => "meow meow meow",
+            "meeeooww" => "meowwwww meowwwwwww meeowww",
+            "MEEOW" => "MEOW. MEOW. MEOW."
+        );
+        $allowed_regxp = array("/^\S+$/i");
+
+        $result = $sg->getValidParameters($params, array(), $allowed_regxp);
+        $this->assertEquals($params, $result);
+    }
+
+    public function testFilterOutInvalidParametersByRegxp()
+    {
+        $sg = new SurveyGizmoApiWrapper();
+
+        $params = array(
+            "meow" => "meow",
+            "meeeooww" => "meowwwww",
+            "woof" => "woof woof woof!",
+            "moo" => "mmoooooooo"
+        );
+        $allowed_regxp = array("/^m+e+o+w+$/i");
+
+        $result = $sg->getValidParameters($params, array(), $allowed_regxp);
+        $this->assertEquals(array("meow" => "meow", "meeeooww" => "meowwwww"), $result);
+    }
+
 }

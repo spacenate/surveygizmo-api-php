@@ -3,7 +3,7 @@
  * SurveyOption Object
  *
  * @package surveygizmo-api-php
- * @version 0.3
+ * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
@@ -68,12 +68,7 @@ class SurveyOption
         $allowed_params = array
         ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion/' . $questionId . '/surveyoption/', 'PUT', $_params);
     }
 	
@@ -91,12 +86,7 @@ class SurveyOption
         $allowed_params = array
         ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSKU, 'POST', $_params);
     }
 	

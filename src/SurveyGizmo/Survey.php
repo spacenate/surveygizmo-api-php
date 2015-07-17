@@ -3,7 +3,7 @@
  * Survey Object
  *
  * @package surveygizmo-api-php
- * @version 0.3
+ * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
@@ -64,12 +64,7 @@ class Survey
         $allowed_params = array
         ("title", "type", "status", "theme", "team", "options[internal_title]", "blockby", "polloptions", "polltype", "pollwidth");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/', 'PUT', $_params);
     }
 
@@ -85,12 +80,7 @@ class Survey
         $allowed_params = array
         ("title", "status", "theme", "team", "options[internal_title]", "blockby", "copy", "polloptions", "polltype");
 
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId, 'POST', $_params);
     }
 

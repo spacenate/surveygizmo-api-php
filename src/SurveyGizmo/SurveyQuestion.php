@@ -3,7 +3,7 @@
  * SurveyQuestion Object
  *
  * @package surveygizmo-api-php
- * @version 0.3
+ * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
@@ -72,25 +72,10 @@ class SurveyQuestion
 		$regex_params = array(
 			"/^properties\[outbound\]\[[0-9]+\]\[fieldname\]$/i",
 			"/^properties\[outbound\]\[[0-9]+\]\[mapping\]$/i",
-			"/^properties\[outbound\]\[[0-9]+\]\[default\]$/i",
-				
+			"/^properties\[outbound\]\[[0-9]+\]\[default\]$/i"
 		);
 		
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-				// key was not found in allowed params, check regex patterns
-				foreach ($regex_params as $pattern) {
-					if (preg_match($pattern, $key)) {
-						// matched a pattern! break out of this foreach
-						break;
-						// and continue with the next key in the enclosing foreach
-						continue;
-					}
-				}
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params, $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion', 'PUT', $_params);
     }
 	
@@ -123,21 +108,7 @@ class SurveyQuestion
 				
 		);
 		
-        foreach ($parameters as $key => $value) {
-            if(!in_array($key, $allowed_params)) {
-				// key was not found in allowed params, check regex patterns
-				foreach ($regex_params as $pattern) {
-					if (preg_match($pattern, $key)) {
-						// matched a pattern! break out of this foreach
-						break;
-						// and continue with the next key in the enclosing foreach
-						continue;
-					}
-				}
-                unset($parameters[$key]);
-            }
-        }
-        $_params = http_build_query($parameters);
+        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params, $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId, 'POST', $_params);
     }
 	
