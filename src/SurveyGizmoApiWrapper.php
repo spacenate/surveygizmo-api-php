@@ -8,11 +8,16 @@
  */
 namespace spacenate;
 
+require_once 'SurveyGizmo/Account.php';
+require_once 'SurveyGizmo/AccountTeams.php';
+require_once 'SurveyGizmo/EmailMessage.php';
 require_once 'SurveyGizmo/OAuth.php';
 require_once 'SurveyGizmo/Survey.php';
+require_once 'SurveyGizmo/SurveyCampaign.php';
+require_once 'SurveyGizmo/SurveyOption.php';
 require_once 'SurveyGizmo/SurveyPage.php';
 require_once 'SurveyGizmo/SurveyQuestion.php';
-require_once 'SurveyGizmo/SurveyOption.php';
+require_once 'SurveyGizmo/SurveyResponse.php';
 
 /**
  * SurveyGizmoApiWrapper class accepts credentials and allows
