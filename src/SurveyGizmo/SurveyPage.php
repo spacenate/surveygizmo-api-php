@@ -3,7 +3,6 @@
  * SurveyPage Object
  *
  * @package surveygizmo-api-php
- * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
