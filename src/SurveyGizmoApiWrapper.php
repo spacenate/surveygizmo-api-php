@@ -28,6 +28,25 @@ require_once 'SurveyGizmo/SurveyResponse.php';
 class SurveyGizmoApiWrapper
 {
 
+	public $surveys;
+	public $pages;
+	public $surveypages;
+	public $questions;
+	public $surveyquestions;
+	public $options;
+	public $surveyoptions;
+	public $campaigns;
+	public $surveycampaigns;
+	public $messages;
+	public $emailmessages;
+	public $responses;
+	public $surveyresponses;
+	public $accounts;
+	public $teams;
+	public $accountteams;
+	public $users;
+	public $accountusers;
+
     protected $email;
     protected $password;
     protected $auth_type;
@@ -84,6 +103,12 @@ class SurveyGizmoApiWrapper
         $this->pages = $this->surveypages = new SurveyGizmo\SurveyPage($this);
         $this->questions = $this->surveyquestions = new SurveyGizmo\SurveyQuestion($this);
         $this->options = $this->surveyoptions = new SurveyGizmo\SurveyOption($this);
+		$this->campaigns = $this->surveycampaigns = new SurveyGizmo\SurveyCampaign($this);
+		$this->messages = $this->emailmessages = new SurveyGizmo\EmailMessage($this);
+		$this->responses = $this->surveyresponses = new SurveyGizmo\SurveyOption($this);
+		$this->accounts = new SurveyGizmo\Account($this);
+		$this->teams = $this->accountteams = new SurveyGizmo\AccountTeams($this);
+		$this->users = $this->accountusers = new SurveyGizmo\AccountUser($this);
 
         $oauth_config = array
         (
