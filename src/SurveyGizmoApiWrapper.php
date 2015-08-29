@@ -3,7 +3,6 @@
  * SurveyGizmo REST API wrapper
  *
  * @package surveygizmo-api-php
- * @version 0.3.5
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate;
@@ -28,24 +27,20 @@ require_once 'SurveyGizmo/SurveyResponse.php';
 class SurveyGizmoApiWrapper
 {
 
-	public $surveys;
-	public $pages;
-	public $surveypages;
-	public $questions;
-	public $surveyquestions;
-	public $options;
-	public $surveyoptions;
-	public $campaigns;
-	public $surveycampaigns;
-	public $messages;
-	public $emailmessages;
-	public $responses;
-	public $surveyresponses;
-	public $accounts;
-	public $teams;
-	public $accountteams;
-	public $users;
-	public $accountusers;
+	public $Account;
+	public $AccountTeams;
+	//public $AccountUser;
+	//public $ContactList;
+    public $Survey;
+    public $SurveyPage;
+    public $SurveyQuestion;
+    public $SurveyOption;
+	public $SurveyCampaign;
+	//public $Contact;
+	public $EmailMessage;
+	public $SurveyResponse;
+	//public $SuveyStatistic;
+	//public $SurveyReport;
 
     protected $email;
     protected $password;
@@ -99,16 +94,21 @@ class SurveyGizmoApiWrapper
         curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($this->ch, CURLOPT_TIMEOUT, $opts['timeout']);
 
-        $this->surveys = new SurveyGizmo\Survey($this);
-        $this->pages = $this->surveypages = new SurveyGizmo\SurveyPage($this);
-        $this->questions = $this->surveyquestions = new SurveyGizmo\SurveyQuestion($this);
-        $this->options = $this->surveyoptions = new SurveyGizmo\SurveyOption($this);
-		$this->campaigns = $this->surveycampaigns = new SurveyGizmo\SurveyCampaign($this);
-		$this->messages = $this->emailmessages = new SurveyGizmo\EmailMessage($this);
-		$this->responses = $this->surveyresponses = new SurveyGizmo\SurveyOption($this);
-		$this->accounts = new SurveyGizmo\Account($this);
-		$this->teams = $this->accountteams = new SurveyGizmo\AccountTeams($this);
-		$this->users = $this->accountusers = new SurveyGizmo\AccountUser($this);
+		$this->Account = new SurveyGizmo\Account($this);
+		$this->AccountTeams = new SurveyGizmo\AccountTeams($this);
+		//this->AccountUser = new SurveyGizmo\AccountUser($this);
+		//$this->ContactList = new SurveyGizmo\ContactList($this);
+        $this->Survey = new SurveyGizmo\Survey($this);
+        $this->SurveyPage = new SurveyGizmo\SurveyPage($this);
+        $this->SurveyQuestion = new SurveyGizmo\SurveyQuestion($this);
+        $this->SurveyOption = new SurveyGizmo\SurveyOption($this);
+		$this->SurveyCampaign = new SurveyGizmo\SurveyCampaign($this);
+		//$this->Contact = new SurveyGizmo\Contact($this);
+		$this->EmailMessage = new SurveyGizmo\EmailMessage($this);
+		$this->SurveyResponse = new SurveyGizmo\SurveyOption($this);
+		//$this->SuveyStatistic = new SurveyGizmo\SuveyStatistic($this);
+		//$this->SurveyReport = new SurveyGizmo\SurveyReport($this);
+		
 
         $oauth_config = array
         (
