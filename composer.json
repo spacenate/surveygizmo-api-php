@@ -2,12 +2,13 @@
     "name": "spacenate/surveygizmo-api-php",
     "description": "PHP wrapper for SurveyGizmo REST API",
     "require": {
-        "themattharris/tmhoauth": "0.8.*"
+        "themattharris/tmhoauth": "0.8.*",
+        "rmccue/requests": "~1.6"
     },
     "authors": [
         {
             "name": "Nathan Sollenberger",
-            "email": "nsollenberger@gmail.com"
+            "email": "nate@spacenate.com"
         }
     ],
     "autoload": {

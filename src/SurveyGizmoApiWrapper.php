@@ -3,10 +3,15 @@
  * SurveyGizmo REST API wrapper
  *
  * @package surveygizmo-api-php
- * @author Nathan Sollenberger <nsollenberger@gmail.com>
+ * @author Nathan Sollenberger <nate@spacenate.com>
  */
 namespace spacenate;
 
+use Http\HttpClientInterface;
+use Http\RequestsClient;
+
+require_once 'Http/HttpClientInterface.php';
+require_once 'Http/RequestsClient.php';
 require_once 'SurveyGizmo/Account.php';
 require_once 'SurveyGizmo/AccountTeams.php';
 require_once 'SurveyGizmo/EmailMessage.php';
@@ -48,11 +53,11 @@ class SurveyGizmoApiWrapper
     protected $domain;
     protected $version;
     protected $format;
-    protected $ch;
+    protected $httpClient;
     protected $debug;
 
     /**
-     * Constructor sets options, initializes curl handler as well as API objects
+     * Constructor sets options, initialize API objects
      *
      * @param string $email (optional) email address to authenticate with
      * @param string $password (optional) md5 or plaintext password to authenticate with
@@ -81,18 +86,14 @@ class SurveyGizmoApiWrapper
         }
         if (isset($opts['format']) && in_array($opts['format'], array("json", "pson", "xml", "debug"))) {
             $this->format = $opts['format'];
-        }
-        else {
+        } else {
             $this->format = "json";
         }
-
-        $this->ch = curl_init();
-
-        curl_setopt($this->ch, CURLOPT_USERAGENT, 'SurveyGizmo-API-PHP/0.3');
-        curl_setopt($this->ch, CURLOPT_HEADER, false);
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($this->ch, CURLOPT_TIMEOUT, $opts['timeout']);
+        if (isset($opts['httpClient']) && $opts['httpClient'] instanceof HttpClientInterface) {
+            $this->httpClient = $opts['httpClient'];
+        } else {
+            $this->httpClient = new Http\RequestsClient();
+        }
 
         $this->Account = new SurveyGizmo\Account($this);
         $this->AccountTeams = new SurveyGizmo\AccountTeams($this);
@@ -109,22 +110,12 @@ class SurveyGizmoApiWrapper
         //$this->SuveyStatistic = new SurveyGizmo\SuveyStatistic($this);
         //$this->SurveyReport = new SurveyGizmo\SurveyReport($this);
 
-
-        $oauth_config = array
-        (
-            'user_agent'                 => 'SurveyGizmo-API-PHP/0.3',
-            'host'                       => 'restapi.surveygizmo.com/' . $this->version
+        // tmhOAuth config
+        $oauth_config = array(
+            'user_agent'    => 'SurveyGizmo-API-PHP/0.3',
+            'host'          => 'restapi.surveygizmo.com/' . $this->version
         );
         $this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
-    }
-
-    /**
-     * Destructor closes curl handler
-     */
-    public function __destruct() {
-        if(is_resource($this->ch)) {
-            curl_close($this->ch);
-        }
     }
 
     /**
@@ -180,8 +171,9 @@ class SurveyGizmoApiWrapper
                 default:
                     return "user:pass=" . $this->email . ":" . $this->password;
             }
+        } else {
+            return false;
         }
-        else return false;
     }
 
     /**
@@ -202,8 +194,7 @@ class SurveyGizmoApiWrapper
         $output = json_decode($output);
         if (isset($output->result_ok) && $output->result_ok) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -214,13 +205,14 @@ class SurveyGizmoApiWrapper
      * @param string $format either "json", "pson", "xml", or "debug"
      * @return bool format set successfully
      */
-    public function setFormat( $format )
+    public function setOutputFormat( $format )
     {
         if (in_array($format, array("json", "pson", "xml", "debug"))) {
             $this->format = $format;
             return true;
+        } else {
+            return false;
         }
-        else return false;
     }
 
     /**
@@ -303,43 +295,18 @@ class SurveyGizmoApiWrapper
         }
 
         $creds  = $this->getCredentials();
+        // throw error
         if (!$creds) return false;
 
-        $ch = $this->ch;
         $url .= "?_method={$method}&{$creds}";
         if ($params) $url .= '&' . $params;
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_VERBOSE, $this->debug);
-
-        $start = microtime(true);
-        $this->log('Call to ' . $url);
-        if($this->debug) {
-            $curl_buffer = fopen('php://memory', 'w+');
-            curl_setopt($ch, CURLOPT_STDERR, $curl_buffer);
+        $this->httpClient->sendRequest($url);
+        if ($this->httpClient->getStatusCode() !== 200) {
+            // handle errors
+            return false;
         }
-
-        $response_body = curl_exec($ch);
-
-        $info = curl_getinfo($ch);
-        $time = microtime(true) - $start;
-        if($this->debug) {
-            rewind($curl_buffer);
-            $this->log(stream_get_contents($curl_buffer));
-            fclose($curl_buffer);
-        }
-        $this->log('Completed in ' . number_format($time * 1000, 2) . 'ms');
-        $this->log('Got response: ' . $response_body);
-
-        if(curl_error($ch)) {
-            throw new Exception("API call to $url failed: " . curl_error($ch));
-        }
-
-        if(floor($info['http_code'] / 100) >= 4) {
-            throw new Exception($result);
-        }
-
-        return $response_body;
+        return $this->httpClient->getResponseBody();
     }
 
     /**
