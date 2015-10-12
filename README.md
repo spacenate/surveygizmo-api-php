@@ -30,7 +30,7 @@ PHP wrapper for the SurveyGizmo REST API
         array("status", "=", "Launched")
     );
 	
-    $surveys = json_decode($sg->surveys->getList($page = 1, $limit = 10, $filter));
+    $surveys = json_decode($sg->Survey->getList($page = 1, $limit = 10, $filter));
     print_r($surveys);
 
 ## Using OAuth
