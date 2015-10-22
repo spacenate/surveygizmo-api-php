@@ -32,7 +32,7 @@ class SurveyResponse
     {
         $page = ($page) ? $page : 1;
         $_params = http_build_query(array("page" => $page));
-		if ($filter) $_params .= "&" . $this->master->getFilterString($filter);
+        if ($filter) $_params .= "&" . $this->master->getFilterString($filter);
         return $this->master->call('survey/' . $surveyId . '/surveyresponse', 'GET', $_params);
     }
 
@@ -55,20 +55,20 @@ class SurveyResponse
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      * @todo Verify data[shortname][SKU-other] and data[shortname][comment] work
-	 */
+     */
     public function createResponse( $surveyId, $parameters = array() )
     {
-		$regex_params = array(
-			"/^data\[[0-9]+\]\[[0-9]{5}(-other)?\]$/i",
-			"/^data\[[0-9]+\]\[(value|comment)\]$/i",
-			"/^data\[\S+\]\[[0-9]{5}(-other)?\]$/i",
-			"/^data\[\S+\]\[(value|comment)\]$/i"
-		);
-		
-        $_params = http_build_query($master->getValidParameters($parameters, array(), $regex_params));
+        $regex_params = array(
+            "/^data\[[0-9]+\]\[[0-9]{5}(-other)?\]$/i",
+            "/^data\[[0-9]+\]\[(value|comment)\]$/i",
+            "/^data\[\S+\]\[[0-9]{5}(-other)?\]$/i",
+            "/^data\[\S+\]\[(value|comment)\]$/i"
+        );
+
+        $_params = http_build_query($this->master->getValidParameters($parameters, array(), $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveyresponse/', 'PUT', $_params);
     }
-	
+
     /**
      * Update a specified response
      *
@@ -79,17 +79,17 @@ class SurveyResponse
      */
     public function updateResponse( $surveyId, $responseId, $parameters = array() )
     {
-		$regex_params = array(
-			"/^data\[[0-9]+\]\[[0-9]{5}(-other)?\]$/i",
-			"/^data\[[0-9]+\]\[(value|comment)\]$/i",
-			"/^data\[\S+\]\[[0-9]{5}(-other)?\]$/i",
-			"/^data\[\S+\]\[(value|comment)\]$/i"
-		);
-		
-        $_params = http_build_query($master->getValidParameters($parameters, array(), $regex_params));
+        $regex_params = array(
+            "/^data\[[0-9]+\]\[[0-9]{5}(-other)?\]$/i",
+            "/^data\[[0-9]+\]\[(value|comment)\]$/i",
+            "/^data\[\S+\]\[[0-9]{5}(-other)?\]$/i",
+            "/^data\[\S+\]\[(value|comment)\]$/i"
+        );
+
+        $_params = http_build_query($this->master->getValidParameters($parameters, array(), $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveyresponse/' . $responseId, 'POST', $_params);
     }
-	
+
     /**
      * Delete a specified response
      *
@@ -102,4 +102,3 @@ class SurveyResponse
         return $this->master->call('survey/' . $surveyId . '/surveyresponse/' . $responseId, 'DELETE');
     }
 }
-

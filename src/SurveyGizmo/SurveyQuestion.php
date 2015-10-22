@@ -57,27 +57,27 @@ class SurveyQuestion
     public function createQuestion( $surveyId, $pageId, $parameters = array() )
     {
         $allowed_params = array(
-			"type", "title", "description", "after", "varname", "shortname", "properties[disabled]",
-			"properties[exclude_number]", "properties[hide_after_response]", "properties[option_sort]",
-			"properties[orientation]", "properties[labels_right]", "properties[question_description_above]",
-			"properties[custom_css]", "properties[required]", "properties[soft-required]",
-			"properties[force_numeric]", "properties[force_percent]", "properties[force_currency]",
-			"properties[min_number]", "properties[max_number]", "properties[min_answers_per_row]",
-			"properties[minimum_response]", "properties[inputmask]", "properties[defaulttext]",
-			"properties[hidden]", "properties[piped_from]", "properties[max_total]",
-			"properties[max_total_noshow]", "properties[must_be_max]", "properties[maxfiles]",
-			"properties[extentions]", "properties[url]"
-		);
-		$regex_params = array(
-			"/^properties\[outbound\]\[[0-9]+\]\[fieldname\]$/i",
-			"/^properties\[outbound\]\[[0-9]+\]\[mapping\]$/i",
-			"/^properties\[outbound\]\[[0-9]+\]\[default\]$/i"
-		);
-		
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params, $regex_params));
+            "type", "title", "description", "after", "varname", "shortname", "properties[disabled]",
+            "properties[exclude_number]", "properties[hide_after_response]", "properties[option_sort]",
+            "properties[orientation]", "properties[labels_right]", "properties[question_description_above]",
+            "properties[custom_css]", "properties[required]", "properties[soft-required]",
+            "properties[force_numeric]", "properties[force_percent]", "properties[force_currency]",
+            "properties[min_number]", "properties[max_number]", "properties[min_answers_per_row]",
+            "properties[minimum_response]", "properties[inputmask]", "properties[defaulttext]",
+            "properties[hidden]", "properties[piped_from]", "properties[max_total]",
+            "properties[max_total_noshow]", "properties[must_be_max]", "properties[maxfiles]",
+            "properties[extentions]", "properties[url]"
+        );
+        $regex_params = array(
+            "/^properties\[outbound\]\[[0-9]+\]\[fieldname\]$/i",
+            "/^properties\[outbound\]\[[0-9]+\]\[mapping\]$/i",
+            "/^properties\[outbound\]\[[0-9]+\]\[default\]$/i"
+        );
+
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params, $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion', 'PUT', $_params);
     }
-	
+
     /**
      * Update a specified question
      *
@@ -89,28 +89,28 @@ class SurveyQuestion
     public function updateQuestion( $surveyId, $questionId, $parameters = array() )
     {
         $allowed_params = array(
-			"title", "description", "varname", "shortname", "properties[disabled]",
-			"properties[exclude_number]", "properties[hide_after_response]", "properties[option_sort]",
-			"properties[orientation]", "properties[labels_right]", "properties[question_description_above]",
-			"properties[custom_css]", "properties[required]", "properties[soft-required]",
-			"properties[force_numeric]", "properties[force_percent]", "properties[force_currency]",
-			"properties[min_number]", "properties[max_number]", "properties[min_answers_per_row]",
-			"properties[minimum_response]", "properties[inputmask]", "properties[defaulttext]",
-			"properties[hidden]", "properties[piped_from]", "properties[max_total]",
-			"properties[max_total_noshow]", "properties[must_be_max]", "properties[maxfiles]",
-			"properties[extentions]", "properties[url]"
-		);
-		$regex_params = array(
-			"/^properties\[outbound\]\[[0-9]+\]\[fieldname\]$/i",
-			"/^properties\[outbound\]\[[0-9]+\]\[mapping\]$/i",
-			"/^properties\[outbound\]\[[0-9]+\]\[default\]$/i",
-				
-		);
-		
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params, $regex_params));
+            "title", "description", "varname", "shortname", "properties[disabled]",
+            "properties[exclude_number]", "properties[hide_after_response]", "properties[option_sort]",
+            "properties[orientation]", "properties[labels_right]", "properties[question_description_above]",
+            "properties[custom_css]", "properties[required]", "properties[soft-required]",
+            "properties[force_numeric]", "properties[force_percent]", "properties[force_currency]",
+            "properties[min_number]", "properties[max_number]", "properties[min_answers_per_row]",
+            "properties[minimum_response]", "properties[inputmask]", "properties[defaulttext]",
+            "properties[hidden]", "properties[piped_from]", "properties[max_total]",
+            "properties[max_total_noshow]", "properties[must_be_max]", "properties[maxfiles]",
+            "properties[extentions]", "properties[url]"
+        );
+        $regex_params = array(
+            "/^properties\[outbound\]\[[0-9]+\]\[fieldname\]$/i",
+            "/^properties\[outbound\]\[[0-9]+\]\[mapping\]$/i",
+            "/^properties\[outbound\]\[[0-9]+\]\[default\]$/i",
+
+        );
+
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params, $regex_params));
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId, 'POST', $_params);
     }
-	
+
     /**
      * Delete a specified question
      *
@@ -123,4 +123,3 @@ class SurveyQuestion
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId, 'DELETE');
     }
 }
-

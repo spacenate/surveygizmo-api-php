@@ -45,12 +45,12 @@ class SurveyPage
     {
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'GET');
     }
-	
+
     /**
      * Create a new page
      *
      * @param string|int $surveyId Id of survey to receive new page
-	 * @param string $title Title for new page
+     * @param string $title Title for new page
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -60,15 +60,15 @@ class SurveyPage
         $allowed_params = array
         ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/', 'PUT', $_params);
     }
-	
+
     /**
      * Update a specified page
      *
      * @param string|int $surveyId Id of survey containing page
-	 * @param string $pageId Id of page to update
+     * @param string $pageId Id of page to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -77,10 +77,10 @@ class SurveyPage
         $allowed_params = array
         ("title", "description", "after", "properties[hidden]", "properties[piped_from]");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'POST', $_params);
     }
-	
+
     /**
      * Delete a specified page
      *
@@ -93,4 +93,3 @@ class SurveyPage
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId, 'DELETE');
     }
 }
-

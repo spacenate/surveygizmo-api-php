@@ -43,24 +43,22 @@ class OAuth extends tmhOAuth
     /**
      * Request an OAuth Request Token
      *
-     * This is the first step to authenticating via OAuth. Step two is to 
-	 * send the User to SurveyGizmo with this request token. After confirming access,
-	 * the User is sent to your callback URL with the same token plus a verifier
-	 *
-	 * @return array containing the following keys:
-	 *         - "oauth_callback_confirmed" (not used?)
-	 *         - "oauth_token"
-	 *         - "oauth_token_secret" (not used?)
-	 *         - "xoauth_token_ttl"
+     * This is the first step to authenticating via OAuth. Step two is to
+     * send the User to SurveyGizmo with this request token. After confirming access,
+     * the User is sent to your callback URL with the same token plus a verifier
+     *
+     * @return array containing the following keys:
+     *         - "oauth_callback_confirmed" (not used?)
+     *         - "oauth_token"
+     *         - "oauth_token_secret" (not used?)
+     *         - "xoauth_token_ttl"
      */
-	// @todo ensure returned errors are consistent across wrapper
+    // @todo ensure returned errors are consistent across wrapper
     public function getRequestToken()
     {
         $code = $this->user_request(array(
             'url' => $this->url('oauth/request_token', ''),
-            'params' => array(
-                'oauth_callback' => $this->callback
-            )
+            'params' => array('oauth_callback' => $this->callback)
         ));
         if ($code != 200) {
             return "There was an error communicating with SurveyGizmo. {$this->response['response']}";
@@ -73,14 +71,14 @@ class OAuth extends tmhOAuth
      * Exchange a verified Request Token for an Access Token
      *
      * This is step three to authenticating via OAuth. After making sure
-	 * this token matches the one originally generated, it and the verifier
-	 * are exchanged for an Access Token and Access Token Secret.
-	 *
-	 * @param string $oauth_token included when SurveyGizmo sends User to registered callback URL 
-	 * @param string $oauth_verifier included when SurveyGizmo sends User to registered callback URL
-	 * @return array containing the following keys:
-	 *         - "oauth_token" Access Token
-	 *         - "oauth_token_secret" Access Token Secret
+     * this token matches the one originally generated, it and the verifier
+     * are exchanged for an Access Token and Access Token Secret.
+     *
+     * @param string $oauth_token included when SurveyGizmo sends User to registered callback URL
+     * @param string $oauth_verifier included when SurveyGizmo sends User to registered callback URL
+     * @return array containing the following keys:
+     *         - "oauth_token" Access Token
+     *         - "oauth_token_secret" Access Token Secret
      */
     public function getAccessToken($oauth_token, $oauth_verifier)
     {
@@ -100,10 +98,10 @@ class OAuth extends tmhOAuth
 
     /**
      * Authenticate API calls with the supplied Access Token and Access Token Secret
-	 *
-	 * @param string $oauth_token Access Token received after completing step three of OAuth process
-	 * @param string $oauth_token_secret Access Token Secret received after completing step three of OAuth process
-	 * @param bool token and secret successfully set
+     *
+     * @param string $oauth_token Access Token received after completing step three of OAuth process
+     * @param string $oauth_token_secret Access Token Secret received after completing step three of OAuth process
+     * @param bool token and secret successfully set
      */
     public function setTokenAndSecret( $oauth_token, $oauth_token_secret )
     {
@@ -112,7 +110,6 @@ class OAuth extends tmhOAuth
             "secret" => $oauth_token_secret
         )));
         $this->master->setAuthTypeOAuth();
-		return true;
+        return true;
     }
 }
-

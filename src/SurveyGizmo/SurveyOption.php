@@ -9,7 +9,6 @@ namespace spacenate\SurveyGizmo;
 
 use spacenate\SurveyGizmoApiWrapper;
 
-
 /**
  * SurveyOption class provides access to the SurveyOption object
  *
@@ -48,15 +47,15 @@ class SurveyOption
     {
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSku, 'GET');
     }
-	
+
     /**
      * Create a new question option
      *
      * @param string|int $surveyId Id of survey containing question
      * @param string|int $pageId Id of page containing question
      * @param string|int $questionId Id of question to receive new option
-	 * @param string $title Title for new option
-	 * @param string $value Reporting value for new option
+     * @param string $title Title for new option
+     * @param string $value Reporting value for new option
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -67,16 +66,16 @@ class SurveyOption
         $allowed_params = array
         ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveypage/' . $pageId . '/surveyquestion/' . $questionId . '/surveyoption/', 'PUT', $_params);
     }
-	
+
     /**
      * Update a specified question option
      *
      * @param string|int $surveyId Id of survey containing question
      * @param string|int $questionId Id of question containing option
-	 * @param string|int $optionSKU SKU of option to update
+     * @param string|int $optionSKU SKU of option to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -85,16 +84,16 @@ class SurveyOption
         $allowed_params = array
         ("title", "value", "after", "properties[dependent]", "properties[other]", "properties[requireother]", "properties[na]", "properties[none]", "properties[all]", "properties[fixed]");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSKU, 'POST', $_params);
     }
-	
+
     /**
      * Delete a specified question option
      *
      * @param string|int $surveyId Id of survey containing question
      * @param string|int $questionId Id of question containing option
-	 * @param string|int $optionSKU SKU of option to delete
+     * @param string|int $optionSKU SKU of option to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteOption( $surveyId, $questionId, $optionSKU )
@@ -102,4 +101,3 @@ class SurveyOption
         return $this->master->call('survey/' . $surveyId . '/surveyquestion/' . $questionId . '/surveyoption/' . $optionSKU, 'DELETE');
     }
 }
-

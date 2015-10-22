@@ -63,7 +63,7 @@ class Survey
         $allowed_params = array
         ("title", "type", "status", "theme", "team", "options[internal_title]", "blockby", "polloptions", "polltype", "pollwidth");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/', 'PUT', $_params);
     }
 
@@ -79,7 +79,7 @@ class Survey
         $allowed_params = array
         ("title", "status", "theme", "team", "options[internal_title]", "blockby", "copy", "polloptions", "polltype");
 
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
         return $this->master->call('survey/' . $surveyId, 'POST', $_params);
     }
 
@@ -94,4 +94,3 @@ class Survey
         return $this->master->call('survey/' . $surveyId, 'DELETE');
     }
 }
-

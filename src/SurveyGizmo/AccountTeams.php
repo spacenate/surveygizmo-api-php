@@ -6,7 +6,9 @@
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
+
 use spacenate\SurveyGizmoApiWrapper;
+
 /**
  * AccountTeams class provides access to the AccountTeams object
  *
@@ -17,7 +19,7 @@ class AccountTeams
     public function __construct(SurveyGizmoApiWrapper $master) {
         $this->master = $master;
     }
-	
+
     /**
      * List all of the teams in an account
      *
@@ -29,7 +31,7 @@ class AccountTeams
         $_params = http_build_query(array("showdeleted" => $showDeleted));
         return $this->master->call('accountteams/', 'GET', $_params);
     }
-	
+
     /**
      * Get information about a specific team
      *
@@ -38,24 +40,24 @@ class AccountTeams
      */
     public function getTeam( $teamId )
     {
-		return $this->master->call('accountteams/' . $teamId, 'GET');
+        return $this->master->call('accountteams/' . $teamId, 'GET');
     }
-	
+
     /**
      * Create a new team
      *
      * @param string $teamName Name of new team
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
-	 */
+     */
     public function createTeam( $teamName, $parameters = array() )
     {
         $parameters["teamname"] = $teamName;
-		$allowed_params = array("teamname", "description", "color", "defaultrole");
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
-		return $this->master->call('accountteams/', 'PUT', $_params);
+        $allowed_params = array("teamname", "description", "color", "defaultrole");
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
+        return $this->master->call('accountteams/', 'PUT', $_params);
     }
-	
+
     /**
      * Update a specified team
      *
@@ -65,11 +67,11 @@ class AccountTeams
      */
     public function updateTeam( $teamId, $parameters = array() )
     {
-		$allowed_params = array("teamname", "description", "color", "defaultrole");
-        $_params = http_build_query($master->getValidParameters($parameters, $allowed_params));
-		return $this->master->call('accountteams/' . $teamId, 'POST', $_params);
-	}
-	
+        $allowed_params = array("teamname", "description", "color", "defaultrole");
+        $_params = http_build_query($this->master->getValidParameters($parameters, $allowed_params));
+        return $this->master->call('accountteams/' . $teamId, 'POST', $_params);
+    }
+
     /**
      * Delete a specified team
      *

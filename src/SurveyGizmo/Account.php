@@ -6,7 +6,9 @@
  * @author Nathan Sollenberger <nsollenberger@gmail.com>
  */
 namespace spacenate\SurveyGizmo;
+
 use spacenate\SurveyGizmoApiWrapper;
+
 /**
  * Account class provides access to the Account object
  *
@@ -17,7 +19,7 @@ class Account
     public function __construct(SurveyGizmoApiWrapper $master) {
         $this->master = $master;
     }
-	
+
     /**
      * List details about an account
      *
