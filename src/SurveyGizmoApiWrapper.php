@@ -147,7 +147,7 @@ class SurveyGizmoApiWrapper
      * Authenticate using OAuth
      *
      * A validated Access Token and Token Secret must be set first
-     * using astronate\SurveyGizmo\OAuth::setTokenAndSecret()
+     * using spacenate\SurveyGizmo\OAuth::setTokenAndSecret()
      *
      * @return null
      */
