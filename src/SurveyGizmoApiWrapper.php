@@ -14,6 +14,7 @@ require_once 'Http/HttpClientInterface.php';
 require_once 'Http/RequestsClient.php';
 require_once 'SurveyGizmo/Account.php';
 require_once 'SurveyGizmo/AccountTeams.php';
+require_once 'SurveyGizmo/AccountUser.php';
 require_once 'SurveyGizmo/EmailMessage.php';
 require_once 'SurveyGizmo/OAuth.php';
 require_once 'SurveyGizmo/Survey.php';
@@ -34,7 +35,7 @@ class SurveyGizmoApiWrapper
 
     public $Account;
     public $AccountTeams;
-    //public $AccountUser;
+    public $AccountUser;
     //public $ContactList;
     public $Survey;
     public $SurveyPage;
@@ -97,7 +98,7 @@ class SurveyGizmoApiWrapper
 
         $this->Account = new SurveyGizmo\Account($this);
         $this->AccountTeams = new SurveyGizmo\AccountTeams($this);
-        //this->AccountUser = new SurveyGizmo\AccountUser($this);
+        $this->AccountUser = new SurveyGizmo\AccountUser($this);
         //$this->ContactList = new SurveyGizmo\ContactList($this);
         $this->Survey = new SurveyGizmo\Survey($this);
         $this->SurveyPage = new SurveyGizmo\SurveyPage($this);
