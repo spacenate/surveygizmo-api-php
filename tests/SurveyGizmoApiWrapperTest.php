@@ -165,19 +165,19 @@ class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
         $result = $sg->getValidParameters($params, array(), $allowed_regxp);
         $this->assertEquals(array("meow" => "meow", "meeeooww" => "meowwwww"), $result);
     }
-	
-	public function testTestUriCreatedCorrectly()
-	{
-		
-	    $httpMock = $this->getMockBuilder('Http\HttpClientInterface')
-					     ->setMethods(array('sendRequest', 'getStatusCode', 'getResponseBody'))
-				         ->getMock();
-	    $httpMock->expects($this->once())
-	             ->method('sendRequest')
-	             ->with($this->equalTo('https://restapi.surveygizmo.com/head/survey.json?_method=GET&user:pass=bob@bobmail.bob:poop&page=1&resultsperpage=0'));
-		
-	    $sg = new SurveyGizmoApiWrapper("bob@bobmail.bob", "poop", "pass", array("httpClient" => $httpMock));
-	    $sg->testCredentials();
-	}
-		
+
+    public function testTestUriCreatedCorrectly()
+    {
+
+        $httpMock = $this->getMockBuilder('Http\HttpClientInterface')
+                         ->setMethods(array('sendRequest', 'getStatusCode', 'getResponseBody'))
+                         ->getMock();
+        $httpMock->expects($this->once())
+                 ->method('sendRequest')
+                 ->with($this->equalTo('https://restapi.surveygizmo.com/head/survey.json?_method=GET&user:pass=bob@bobmail.bob:poop&page=1&resultsperpage=0'));
+
+        $sg = new SurveyGizmoApiWrapper("bob@bobmail.bob", "poop", "pass", array("httpClient" => $httpMock));
+        $sg->testCredentials();
+    }
+
 }
