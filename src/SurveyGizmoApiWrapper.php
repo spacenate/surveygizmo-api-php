@@ -107,7 +107,7 @@ class SurveyGizmoApiWrapper
         $this->SurveyCampaign = new SurveyGizmo\SurveyCampaign($this);
         //$this->Contact = new SurveyGizmo\Contact($this);
         $this->EmailMessage = new SurveyGizmo\EmailMessage($this);
-        $this->SurveyResponse = new SurveyGizmo\SurveyOption($this);
+        $this->SurveyResponse = new SurveyGizmo\SurveyResponse($this);
         //$this->SuveyStatistic = new SurveyGizmo\SuveyStatistic($this);
         //$this->SurveyReport = new SurveyGizmo\SurveyReport($this);
 
@@ -134,7 +134,7 @@ class SurveyGizmoApiWrapper
         }
         if ("oauth" === $auth_type) {
             return $this->oauth->setTokenAndSecret($email, $password);
-            // setTokenAndSecret also sets auth_type
+            // setTokenAndSecret also calls SurveyGizmoApiWrapper::setAuthTypeOAuth()
         } else {
             $this->email = $email;
             $this->password = $password;
