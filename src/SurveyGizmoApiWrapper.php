@@ -60,9 +60,9 @@ class SurveyGizmoApiWrapper
     /**
      * Constructor sets options, initialize API objects
      *
-     * @param string $email (optional) email address to authenticate with
-     * @param string $password (optional) md5 or plaintext password to authenticate with
-     * @param string $auth_type (optional) which auth type to use, "md5" or "pass"
+     * @param string $email (optional) email address or api_token to authenticate with
+     * @param string $password (optional) md5 or plaintext password to authenticate with (ignored if using api_token)
+     * @param string $auth_type (optional) which auth type to use, "md5", "pass" or "api_token"
      * @param array $opts (optional) key-value pairs of one or more of the following keys:
      *        - "timeout" int connection timeout limit
      *        - "debug" bool enable debug logging
@@ -72,7 +72,7 @@ class SurveyGizmoApiWrapper
     // @todo move all options to config array, with logic in its own method!
     public function __construct( $email = "", $password = "", $auth_type = "pass", $opts = array() )
     {
-        if ($email && $password) {
+        if ($email && ($password || $auth_type)) {
             $this->setCredentials($email, $password, $auth_type);
         }
 
@@ -124,12 +124,12 @@ class SurveyGizmoApiWrapper
      *
      * @param string $email email address (or Access Token) to authenticate with
      * @param string $password md5 or plaintext password (or Access Token Secret) to authenticate with
-     * @param string $auth_type (optional) which auth type to use, "md5", "pass", or "oauth". Defaults to "pass"
+     * @param string $auth_type (optional) which auth type to use, "md5", "pass", "api_token", or "oauth". Defaults to "pass"
      * @return bool credentials set successfully
      */
     public function setCredentials( $email, $password, $auth_type = "pass" )
     {
-        if (!in_array($auth_type, array("md5", "pass", "oauth"))) {
+        if (!in_array($auth_type, array("md5", "pass", "oauth", "api_token"))) {
             return false;
         }
         if ("oauth" === $auth_type) {
@@ -163,10 +163,12 @@ class SurveyGizmoApiWrapper
      */
     public function getCredentials()
     {
-        if (isset($this->email) && isset($this->password)) {
+        if (isset($this->email)) {
             switch ($this->auth_type) {
                 case "oauth":
                     return false;
+                case "api_token":
+                    return "api_token=" . $this->email;
                 case "md5":
                     return "user:md5=" . $this->email . ":" . $this->password;
                 default:
