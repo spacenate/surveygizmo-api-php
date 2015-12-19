@@ -15,7 +15,8 @@ class RequestsClient implements HttpClientInterface
 	
 	public function sendRequest( $uri )
 	{
-		$this->response = Requests::get($uri);
+		// Set timeout to 60 seconds
+		$this->response = Requests::get($uri, array(), array("timeout" => 60));
 	}
 	
 	public function getStatusCode()
