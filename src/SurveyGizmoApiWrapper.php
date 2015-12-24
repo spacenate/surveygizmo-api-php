@@ -7,8 +7,8 @@
  */
 namespace spacenate;
 
-use Http\HttpClientInterface;
-use Http\RequestsClient;
+use spacenate\Http\HttpClientInterface;
+use spacenate\Http\RequestsClient;
 
 require_once 'Http/HttpClientInterface.php';
 require_once 'Http/RequestsClient.php';
@@ -48,9 +48,9 @@ class SurveyGizmoApiWrapper
     //public $SuveyStatistic;
     //public $SurveyReport;
 
-    protected $email;
-    protected $password;
-    protected $auth_type;
+    protected $userId;
+    protected $secret;
+    protected $authType;
     protected $domain;
     protected $version;
     protected $format;
@@ -60,9 +60,9 @@ class SurveyGizmoApiWrapper
     /**
      * Constructor sets options, initialize API objects
      *
-     * @param string $email (optional) email address or api_token to authenticate with
-     * @param string $password (optional) md5 or plaintext password to authenticate with (ignored if using api_token)
-     * @param string $auth_type (optional) which auth type to use, "md5", "pass" or "api_token"
+     * @param string $userId (optional) API token, email address, or OAuth access token to authenticate with
+     * @param string $secret (optional) API token secret, md5, plaintext password or OAuth access token secret to authenticate with
+     * @param string $authType (optional) which authentication type to use, "api_token", "md5", "pass", or "oauth". Defaults to "api_token"
      * @param array $opts (optional) key-value pairs of one or more of the following keys:
      *        - "timeout" int connection timeout limit
      *        - "debug" bool enable debug logging
@@ -70,10 +70,10 @@ class SurveyGizmoApiWrapper
      *        - "domain" string domain name to make api calls against
      */
     // @todo move all options to config array, with logic in its own method!
-    public function __construct( $email = "", $password = "", $auth_type = "pass", $opts = array() )
+    public function __construct( $userId = null, $secret = null, $authType = null, $opts = array() )
     {
-        if ($email && ($password || $auth_type)) {
-            $this->setCredentials($email, $password, $auth_type);
+        if ($userId) {
+            $this->setCredentials($userId, $secret, $authType);
         }
 
         $this->domain = (!isset($opts['domain']) || !is_string($opts['domain'])) ? "restapi.surveygizmo.com" : $opts['domain'];
@@ -93,7 +93,7 @@ class SurveyGizmoApiWrapper
         if (isset($opts['httpClient']) && $opts['httpClient'] instanceof HttpClientInterface) {
             $this->httpClient = $opts['httpClient'];
         } else {
-            $this->httpClient = new Http\RequestsClient();
+            $this->httpClient = new RequestsClient();
         }
 
         $this->Account = new SurveyGizmo\Account($this);
@@ -114,7 +114,7 @@ class SurveyGizmoApiWrapper
         // tmhOAuth config
         $oauth_config = array(
             'user_agent'    => 'SurveyGizmo-API-PHP/0.3',
-            'host'          => 'restapi.surveygizmo.com/' . $this->version
+            'host'          => $this->domain . $this->version
         );
         $this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
     }
@@ -122,23 +122,27 @@ class SurveyGizmoApiWrapper
     /**
      * Specify the credentials to use when connecting to the API
      *
-     * @param string $email email address (or Access Token) to authenticate with
-     * @param string $password md5 or plaintext password (or Access Token Secret) to authenticate with
-     * @param string $auth_type (optional) which auth type to use, "md5", "pass", "api_token", or "oauth". Defaults to "pass"
+     * @param string $userId API token, email address, or OAuth access token to authenticate with
+     * @param string $secret (optional) API token secret, md5, plaintext password or OAuth access token secret to authenticate with
+     * @param string $authType (optional) which authentication type to use, "api_token", "md5", "pass", or "oauth". Defaults to "api_token"
      * @return bool credentials set successfully
      */
-    public function setCredentials( $email, $password, $auth_type = "pass" )
+    public function setCredentials( $userId, $secret = null, $authType = null )
     {
-        if (!in_array($auth_type, array("md5", "pass", "oauth", "api_token"))) {
+        if ($authType === null) {
+            $authType = "api_token";
+        }
+        if (!in_array($authType, array("api_token", "md5", "pass", "oauth"))) {
             return false;
         }
-        if ("oauth" === $auth_type) {
-            return $this->oauth->setTokenAndSecret($email, $password);
+
+        if ("oauth" === $authType) {
+            return $this->oauth->setTokenAndSecret($userId, $secret);
             // setTokenAndSecret also calls SurveyGizmoApiWrapper::setAuthTypeOAuth()
         } else {
-            $this->email = $email;
-            $this->password = $password;
-            $this->auth_type = $auth_type;
+            $this->userId = $userId;
+            $this->secret = $secret;
+            $this->authType = $authType;
             return true;
         }
     }
@@ -153,7 +157,7 @@ class SurveyGizmoApiWrapper
      */
     public function setAuthTypeOAuth()
     {
-        $this->auth_type = "oauth";
+        $this->authType = "oauth";
     }
 
     /**
@@ -163,16 +167,17 @@ class SurveyGizmoApiWrapper
      */
     public function getCredentials()
     {
-        if (isset($this->email)) {
-            switch ($this->auth_type) {
+        if (isset($this->userId)) {
+            switch ($this->authType) {
                 case "oauth":
                     return false;
                 case "api_token":
-                    return "api_token=" . $this->email;
+                    $token_secret = ($this->secret) ? "&api_token_secret=" . $this->secret : "";
+                    return "api_token=" . $this->userId . $token_secret;
                 case "md5":
-                    return "user:md5=" . $this->email . ":" . $this->password;
+                    return "user:md5=" . $this->userId . ":" . $this->secret;
                 default:
-                    return "user:pass=" . $this->email . ":" . $this->password;
+                    return "user:pass=" . $this->userId . ":" . $this->secret;
             }
         } else {
             return false;
@@ -187,7 +192,7 @@ class SurveyGizmoApiWrapper
     public function testCredentials()
     {
         $params = array('page'=>1,'resultsperpage'=>0);
-        if ($this->auth_type === "oauth") {
+        if ($this->authType === "oauth") {
             $this->oauth->request("GET", "https://{$this->domain}/{$this->version}/survey", $params);
             $output = $this->oauth->response['response'];
         } else {
@@ -289,7 +294,7 @@ class SurveyGizmoApiWrapper
         $format = in_array($format, array("json", "pson", "xml", "debug")) ? $format : $this->format;
         $url    = "https://{$this->domain}/{$this->version}/{$endPoint}.{$format}";
 
-        if ($this->auth_type === "oauth") {
+        if ($this->authType === "oauth") {
             $this->log("Using OAuth");
             // turn query string in to key=>value array
             parse_str($params, $params);
@@ -325,4 +330,3 @@ class SurveyGizmoApiWrapper
             print $msg . "\n";
     }
 }
-
