@@ -85,3 +85,7 @@ To use an OAuth access token, use the `setCredentials()` method, specifying the 
 
 ### SurveyGizmo API Documentation
 [http://apihelp.surveygizmo.com/help](http://apihelp.surveygizmo.com/help "SurveyGizmo REST API Help Documentation")
+
+### License
+
+MIT
