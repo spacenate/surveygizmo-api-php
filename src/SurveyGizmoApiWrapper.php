@@ -94,6 +94,7 @@ class SurveyGizmoApiWrapper
             $this->httpClient = $opts['httpClient'];
         } else {
             $this->httpClient = new RequestsClient();
+            $this->httpClient->setTimeout($opts['timeout']);
         }
 
         $this->Account = new SurveyGizmo\Account($this);
@@ -300,7 +301,7 @@ class SurveyGizmoApiWrapper
             // turn query string in to key=>value array
             parse_str($params, $params);
             $this->oauth->request($method, $url, $params);
-            
+
             return $this->oauth->response['response'];
         }
 
