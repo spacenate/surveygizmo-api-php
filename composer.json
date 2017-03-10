@@ -5,6 +5,9 @@
         "themattharris/tmhoauth": "0.8.*",
         "rmccue/requests": "~1.6"
     },
+    "require-dev": {
++        "phpunit/phpunit": "~4.0"
++    },
     "authors": [
         {
             "name": "Nathan Sollenberger",

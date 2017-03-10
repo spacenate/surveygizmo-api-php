@@ -62,7 +62,7 @@ class SurveyGizmoApiWrapper
      *
      * @param string $userId (optional) API token, email address, or OAuth access token to authenticate with
      * @param string $secret (optional) API token secret, md5, plaintext password or OAuth access token secret to authenticate with
-     * @param string $authType (optional) which authentication type to use, "api_token", "md5", "pass", or "oauth". Defaults to "api_token"
+     * @param string $authType (optional) which authentication type to use, "api_token" or "oauth". Defaults to "api_token"
      * @param array $opts (optional) key-value pairs of one or more of the following keys:
      *        - "timeout" int connection timeout limit
      *        - "debug" bool enable debug logging
@@ -77,7 +77,7 @@ class SurveyGizmoApiWrapper
         }
 
         $this->domain = (!isset($opts['domain']) || !is_string($opts['domain'])) ? "restapi.surveygizmo.com" : $opts['domain'];
-        $this->version = (!isset($opts['version']) || !is_string($opts['version'])) ? "head" : $opts['version'];
+        $this->version = (!isset($opts['version']) || !is_string($opts['version'])) ? "v5" : $opts['version'];
 
         if (!isset($opts['timeout']) || !is_int($opts['timeout'])) {
             $opts['timeout'] = 60;
@@ -123,8 +123,8 @@ class SurveyGizmoApiWrapper
      * Specify the credentials to use when connecting to the API
      *
      * @param string $userId API token, email address, or OAuth access token to authenticate with
-     * @param string $secret (optional) API token secret, md5, plaintext password or OAuth access token secret to authenticate with
-     * @param string $authType (optional) which authentication type to use, "api_token", "md5", "pass", or "oauth". Defaults to "api_token"
+     * @param string $secret (optional) API token secret or OAuth access token secret to authenticate with
+     * @param string $authType (optional) which authentication type to use, "api_token" or "oauth". Defaults to "api_token"
      * @return bool credentials set successfully
      */
     public function setCredentials( $userId, $secret = null, $authType = null )
@@ -132,7 +132,7 @@ class SurveyGizmoApiWrapper
         if ($authType === null) {
             $authType = "api_token";
         }
-        if (!in_array($authType, array("api_token", "md5", "pass", "oauth"))) {
+        if (!in_array($authType, array("api_token", "oauth"))) {
             return false;
         }
 
@@ -172,12 +172,9 @@ class SurveyGizmoApiWrapper
                 case "oauth":
                     return false;
                 case "api_token":
+                default:
                     $token_secret = ($this->secret) ? "&api_token_secret=" . $this->secret : "";
                     return "api_token=" . $this->userId . $token_secret;
-                case "md5":
-                    return "user:md5=" . $this->userId . ":" . $this->secret;
-                default:
-                    return "user:pass=" . $this->userId . ":" . $this->secret;
             }
         } else {
             return false;
@@ -288,6 +285,7 @@ class SurveyGizmoApiWrapper
      * @param string $params (optional) query string formatted parameters
      * @param string $format (optional) format to request
      * @return string SG API object
+     * @throws ErrorException
      */
     public function call( $endPoint, $method = "GET", $params = "", $format = "" )
     {
@@ -296,15 +294,24 @@ class SurveyGizmoApiWrapper
 
         if ($this->authType === "oauth") {
             $this->log("Using OAuth");
+            $this->log("Request: $method $url");
+            $this->log("Params: $params");
+
             // turn query string in to key=>value array
             parse_str($params, $params);
             $this->oauth->request($method, $url, $params);
+            
             return $this->oauth->response['response'];
         }
 
         $creds  = $this->getCredentials();
         // throw error
-        if (!$creds) return false;
+        if (!$creds) {
+            throw new ErrorException('Missing API credentials');
+        }
+
+        $this->log("Request: $method $url");
+        $this->log("Params: $params");
 
         $url .= "?_method={$method}&{$creds}";
         if ($params) $url .= '&' . $params;

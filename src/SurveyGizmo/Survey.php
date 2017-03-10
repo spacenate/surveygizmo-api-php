@@ -34,7 +34,7 @@ class Survey
         $limit = ($limit) ? $limit : 50;
         $_params = http_build_query(array("resultsperpage" => $limit, "page" => $page));
         if ($filter) $_params .= "&" . $this->master->getFilterString($filter);
-        return $this->master->call('survey', 'GET', $_params);
+        return $this->master->call('survey/', 'GET', $_params);
     }
 
     /**

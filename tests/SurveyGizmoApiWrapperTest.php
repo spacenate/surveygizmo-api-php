@@ -6,15 +6,15 @@ use spacenate\SurveyGizmoApiWrapper;
 
 class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructorCanBeCalledWithOrWithoutCredentials()
+    public function testConstructorCanBeCalledWithCredentials()
     {
-        $sg = new SurveyGizmoApiWrapper("test@case.com", "plaintext_password", "pass");
+        $sg = new SurveyGizmoApiWrapper("123ABC789DEF0000123ABC789DEF0000", "meow");
 
         $result = $sg->getCredentials();
-        $this->assertEquals("user:pass=test@case.com:plaintext_password", $result);
+        $this->assertEquals("api_token=123ABC789DEF0000123ABC789DEF0000&api_token_secret=meow", $result);
     }
 
-    public function testConstructorCanBeCalledWithOrWithoutCredentials2()
+    public function testConstructorCanBeCalledWithoutCredentials()
     {
         $sg = new SurveyGizmoApiWrapper();
 
@@ -37,23 +37,24 @@ class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
     public function credentialsTypeProvider()
     {
         return array(
-            array("md5", true),
-            array("pass", true),
+            array("api_token", true),
             array("oauth", true),
+            array("pass", false),
+            array("md5", false),
             array("foobar", false),
             array(1, false),
             array(false, false)
         );
     }
 
-    public function testCredentialTypeDefaultsToPass()
+    public function testCredentialTypeDefaultsToToken()
     {
         $sg = new SurveyGizmoApiWrapper();
 
-        $sg->setCredentials("test@case.com", "secret");
+        $sg->setCredentials("123ABC789DEF0000123ABC789DEF0000");
 
         $result = $sg->getCredentials();
-        $this->assertEquals("user:pass=test@case.com:secret", $result);
+        $this->assertEquals("api_token=123ABC789DEF0000123ABC789DEF0000", $result);
     }
 
     /**
@@ -110,11 +111,14 @@ class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
 
         $params = array(
             "meow" => "meow meow meow",
-            "woof" => "woof woof woof"
+            "woof" => "woof woof woof",
+            "purr" => "prrr purrr prrrr"
         );
-        $allowed = array("meow", "woof");
+        $allowed = array("meow", "purr");
 
         $result = $sg->getValidParameters($params, $allowed);
+        unset($params['woof']);
+
         $this->assertEquals($params, $result);
     }
 
@@ -174,9 +178,9 @@ class SurveyGizmoApiWrapperTest extends \PHPUnit_Framework_TestCase
                          ->getMock();
         $httpMock->expects($this->once())
                  ->method('sendRequest')
-                 ->with($this->equalTo('https://restapi.surveygizmo.com/head/survey.json?_method=GET&user:pass=bob@bobmail.bob:poop&page=1&resultsperpage=0'));
+                 ->with($this->equalTo('https://restapi.surveygizmo.com/head/survey.json?_method=GET&api_token=123ABC789DEF0000123ABC789DEF0000&api_token_secret=meow&page=1&resultsperpage=0'));
 
-        $sg = new SurveyGizmoApiWrapper("bob@bobmail.bob", "poop", "pass", array("httpClient" => $httpMock));
+        $sg = new SurveyGizmoApiWrapper("api_token=123ABC789DEF0000123ABC789DEF0000", "meow", "api_token", array("httpClient" => $httpMock));
         $sg->testCredentials();
     }
 

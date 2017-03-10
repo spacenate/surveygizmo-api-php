@@ -19,14 +19,14 @@ PHP wrapper for the SurveyGizmo REST API
 
     use spacenate\SurveyGizmoApiWrapper;
 
-    $sg = new SurveyGizmoApiWrapper($userId = "email@address.com", $secret = "5ebe2294ecd0e0f08eab7690d2a6ee69", $type = "md5");
+    $sg = new SurveyGizmoApiWrapper($api_token = "123ABC789DEF0000123ABC789DEF0000", $secret = "meow");
 
     if (!$sg->testCredentials()) {
         die("Poop! Failed to authenticate with the provided credentials.");
     }
 
     $filter = array(
-        array("modifiedon", ">", "2015-01-01"),
+        array("date_modified", ">", "2015-01-01"),
         array("status", "=", "Launched")
     );
 
