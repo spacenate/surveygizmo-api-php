@@ -35,7 +35,7 @@ class AccountTeams
     /**
      * Get information about a specific team
      *
-     * @param string|int $teamId Id of team to get information for
+     * @param int $teamId Id of team to get information for
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getTeam( $teamId )
@@ -61,7 +61,7 @@ class AccountTeams
     /**
      * Update a specified team
      *
-     * @param string|int $teamId Id of team to update
+     * @param int $teamId Id of team to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -75,7 +75,7 @@ class AccountTeams
     /**
      * Delete a specified team
      *
-     * @param string|int $teamId Id of team to update
+     * @param int $teamId Id of team to update
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteTeam( $teamId )

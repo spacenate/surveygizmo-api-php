@@ -23,8 +23,8 @@ class SurveyQuestion
     /**
      * List all the questions in a survey
      *
-     * @param string|int $surveyId Id of survey to get questions for
-     * @param string|int $page (optional) page of results to fetch
+     * @param int $surveyId Id of survey to get questions for
+     * @param int $page (optional) page of results to fetch
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getList( $surveyId, $page = 1 )
@@ -37,8 +37,8 @@ class SurveyQuestion
     /**
      * Get a specific question in a survey
      *
-     * @param string|int $surveyId Id of survey question is in
-     * @param string|int $questionId Id of question to get
+     * @param int $surveyId Id of survey question is in
+     * @param int $questionId Id of question to get
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getQuestion( $surveyId, $questionId )
@@ -49,8 +49,8 @@ class SurveyQuestion
     /**
      * Create a new question
      *
-     * @param string|int $surveyId Id of survey to create new question in
-     * @param string|int $pageId Id of page to put new question in
+     * @param int $surveyId Id of survey to create new question in
+     * @param int $pageId Id of page to put new question in
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -81,8 +81,8 @@ class SurveyQuestion
     /**
      * Update a specified question
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question to update
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -114,8 +114,8 @@ class SurveyQuestion
     /**
      * Delete a specified question
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question to delete
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteQuestion( $surveyId, $questionId )

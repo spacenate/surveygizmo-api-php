@@ -23,9 +23,9 @@ class SurveyOption
     /**
      * List all the options in a question
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question to get options for
-     * @param string|int $page (optional) page of results to fetch
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question to get options for
+     * @param int $page (optional) page of results to fetch
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getList( $surveyId, $questionId, $page = 1 )
@@ -38,9 +38,9 @@ class SurveyOption
     /**
      * Get a specific option in a question
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question containing option
-     * @param string|int $optionSku Sku of option to get
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question containing option
+     * @param int $optionSku Sku of option to get
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getOption( $surveyId, $questionId, $optionSku )
@@ -51,9 +51,9 @@ class SurveyOption
     /**
      * Create a new question option
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $pageId Id of page containing question
-     * @param string|int $questionId Id of question to receive new option
+     * @param int $surveyId Id of survey containing question
+     * @param int $pageId Id of page containing question
+     * @param int $questionId Id of question to receive new option
      * @param string $title Title for new option
      * @param string $value Reporting value for new option
      * @param array $parameters (optional) key-value pairs of additional parameters
@@ -73,9 +73,9 @@ class SurveyOption
     /**
      * Update a specified question option
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question containing option
-     * @param string|int $optionSKU SKU of option to update
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question containing option
+     * @param int $optionSKU SKU of option to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -91,9 +91,9 @@ class SurveyOption
     /**
      * Delete a specified question option
      *
-     * @param string|int $surveyId Id of survey containing question
-     * @param string|int $questionId Id of question containing option
-     * @param string|int $optionSKU SKU of option to delete
+     * @param int $surveyId Id of survey containing question
+     * @param int $questionId Id of question containing option
+     * @param int $optionSKU SKU of option to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteOption( $surveyId, $questionId, $optionSKU )

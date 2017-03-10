@@ -23,8 +23,8 @@ class Survey
     /**
      * List all the surveys in an account
      *
-     * @param string|int $page (optional) page of results to fetch
-     * @param string|int $limit (optional) number of results to fetch
+     * @param int $page (optional) page of results to fetch
+     * @param int $limit (optional) number of results to fetch
      * @param array $filter (optional) one or more filter arrays
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -40,7 +40,7 @@ class Survey
     /**
      * Get a specific survey
      *
-     * @param string|int $surveyId Id of survey to fetch
+     * @param int $surveyId Id of survey to fetch
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getSurvey( $surveyId )
@@ -70,7 +70,7 @@ class Survey
     /**
      * Update and/or copy a specified survey
      *
-     * @param string|int $surveyId Id of survey to update/copy
+     * @param int $surveyId Id of survey to update/copy
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -86,7 +86,7 @@ class Survey
     /**
      * Delete a specified survey
      *
-     * @param string|int $surveyId Id of survey to delete
+     * @param int $surveyId Id of survey to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteSurvey( $surveyId )

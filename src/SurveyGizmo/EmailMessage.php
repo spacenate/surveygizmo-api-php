@@ -23,8 +23,8 @@ class EmailMessage
     /**
      * List all of the emailmessages in a campaign
      *
-     * @param string|int $surveyId Id of survey campaign is in
-     * @param string|int $campaignId Id of campaign to get messages for
+     * @param int $surveyId Id of survey campaign is in
+     * @param int $campaignId Id of campaign to get messages for
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getList( $surveyId, $campaignId )
@@ -35,9 +35,9 @@ class EmailMessage
     /**
      * Get a specific emailmessage in a campaign
      *
-     * @param string|int $surveyId Id of survey containing campaign
-     * @param string|int $campaignId Id of campaign containing message
-     * @param string|int $messageId Id of message to get
+     * @param int $surveyId Id of survey containing campaign
+     * @param int $campaignId Id of campaign containing message
+     * @param int $messageId Id of message to get
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getMessage( $surveyId, $campaignId, $messageId )
@@ -48,8 +48,8 @@ class EmailMessage
     /**
      * Create a new emailmessage
      *
-     * @param string|int $surveyId Id of survey to create message in
-     * @param string|int $campaignId Id of campaign to create message in
+     * @param int $surveyId Id of survey to create message in
+     * @param int $campaignId Id of campaign to create message in
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -63,9 +63,9 @@ class EmailMessage
     /**
      * Update a specified emailmessage
      *
-     * @param string|int $surveyId Id of survey containing campaign
-     * @param string|int $campaignId Id of campaign containing message
-     * @param string|int $messageId Id of message to update
+     * @param int $surveyId Id of survey containing campaign
+     * @param int $campaignId Id of campaign containing message
+     * @param int $messageId Id of message to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -79,9 +79,9 @@ class EmailMessage
     /**
      * Delete a specified emailmessage
      *
-     * @param string|int $surveyId Id of survey containing campaign
-     * @param string|int $campaignId Id of campaign containing message
-     * @param string|int $messageId Id of message to delete
+     * @param int $surveyId Id of survey containing campaign
+     * @param int $campaignId Id of campaign containing message
+     * @param int $messageId Id of message to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteMessage( $surveyId, $campaignId )

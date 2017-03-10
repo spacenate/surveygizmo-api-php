@@ -23,15 +23,17 @@ class SurveyResponse
     /**
      * List all of the responses a survey has collected
      *
-     * @param string|int $surveyId Id of survey to get responses for
-     * @param string|int $page (optional) page of results to fetch
+     * @param int $surveyId Id of survey to get responses for
+     * @param int $page (optional) page of results to fetch
+     * @param int $limit (optional) number of results to fetch
      * @param array $filter (optional) one or more filter arrays
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
-    public function getList( $surveyId, $page = 1, $filter = array() )
+    public function getList( $surveyId, $page = 1, $limit = 50, $filter = array() )
     {
         $page = ($page) ? $page : 1;
-        $_params = http_build_query(array("page" => $page));
+        $limit = ($limit) ? $limit : 50;
+        $_params = http_build_query(array("resultsperpage" => $limit, "page" => $page));
         if ($filter) $_params .= "&" . $this->master->getFilterString($filter);
         return $this->master->call('survey/' . $surveyId . '/surveyresponse', 'GET', $_params);
     }
@@ -39,8 +41,8 @@ class SurveyResponse
     /**
      * Get a specific response to a survey
      *
-     * @param string|int $surveyId Id of survey to get response from
-     * @param string|int $responseId Id of response to get
+     * @param int $surveyId Id of survey to get response from
+     * @param int $responseId Id of response to get
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getResponse( $surveyId, $responseId )
@@ -51,7 +53,7 @@ class SurveyResponse
     /**
      * Create a new response
      *
-     * @param string|int $surveyId Id of survey to create response for
+     * @param int $surveyId Id of survey to create response for
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      * @todo Verify data[shortname][SKU-other] and data[shortname][comment] work
@@ -72,8 +74,8 @@ class SurveyResponse
     /**
      * Update a specified response
      *
-     * @param string|int $surveyId Id of survey containing response
-     * @param string|int $responseId Id of response to update
+     * @param int $surveyId Id of survey containing response
+     * @param int $responseId Id of response to update
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -93,8 +95,8 @@ class SurveyResponse
     /**
      * Delete a specified response
      *
-     * @param string|int $surveyId Id of survey containing response
-     * @param string|int $responseId Id of response to delete
+     * @param int $surveyId Id of survey containing response
+     * @param int $responseId Id of response to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteResponse( $surveyId, $responseId )

@@ -23,8 +23,8 @@ class SurveyCampaign
     /**
      * List all of the campaigns in a survey
      *
-     * @param string|int $surveyId Id of survey to get campaigns for
-     * @param string|int $page (optional) page of results to fetch
+     * @param int $surveyId Id of survey to get campaigns for
+     * @param int $page (optional) page of results to fetch
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getList( $surveyId, $page = 1 )
@@ -37,8 +37,8 @@ class SurveyCampaign
     /**
      * Get a specific campaign in a survey
      *
-     * @param string|int $surveyId Id of survey to get campaign from
-     * @param string|int $campaignId Id of campaign to get
+     * @param int $surveyId Id of survey to get campaign from
+     * @param int $campaignId Id of campaign to get
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function getCampaign( $surveyId, $campaignId )
@@ -49,7 +49,7 @@ class SurveyCampaign
     /**
      * Create a new campaign
      *
-     * @param string|int $surveyId Id of survey to create campaign in
+     * @param int $surveyId Id of survey to create campaign in
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -63,8 +63,8 @@ class SurveyCampaign
     /**
      * Update or copy a specified campaign
      *
-     * @param string|int $surveyId Id of survey containing campaign
-     * @param string|int $campaignId Id of campaign to update or copy
+     * @param int $surveyId Id of survey containing campaign
+     * @param int $campaignId Id of campaign to update or copy
      * @param array $parameters (optional) key-value pairs of additional parameters
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
@@ -78,8 +78,8 @@ class SurveyCampaign
     /**
      * Delete a specified campaign
      *
-     * @param string|int $surveyId Id of survey containing campaign
-     * @param string|int $campaignId Id of campaign to delete
+     * @param int $surveyId Id of survey containing campaign
+     * @param int $campaignId Id of campaign to delete
      * @return string SG API object according to format specified in SurveyGizmoApiWrapper
      */
     public function deleteCampaign( $surveyId, $campaignId )
