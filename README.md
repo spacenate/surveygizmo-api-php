@@ -75,7 +75,7 @@ Once the user has authorized access, they will be sent to your callback URL with
     // Exchange for access token and secret -- Note that this is returned as an associative array!
     $result = $sg->oauth->getAccessToken($oauth_token, $oauth_verifier);
 
-    // Yay credentials! Note that at this time, SurveyGizmo OAuth tokens *CANNOT* be revoked, so store these in a very safe place
+    // Yay credentials! Note that at this time, SurveyGizmo OAuth tokens *CANNOT* be revoked, so store these properly encrypted in a safe place
     $access_token = $result['oauth_token'];
     $access_token_secret = $result['oauth_token_secret'];
 
