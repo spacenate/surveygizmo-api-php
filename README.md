@@ -19,7 +19,10 @@ Add these contents to your `composer.json` file, and then run `composer install`
 
 ## A simple example
 
+    <?php
     use spacenate\SurveyGizmoApiWrapper;
+
+    require 'vendor/autoload.php';
 
     $sg = new SurveyGizmoApiWrapper($api_token = "123ABC789DEF0000123ABC789DEF0000", $secret = "meow");
 
@@ -39,7 +42,10 @@ Add these contents to your `composer.json` file, and then run `composer install`
 
 To use OAuth, you'll first need to provide an OAuth key, secret, and callback URL.
 
+    <?php
     use spacenate\SurveyGizmoApiWrapper();
+
+    require 'vendor/autoload.php';
 
     // Create wrapper object
     $sg = new SurveyGizmoApiWrapper();
