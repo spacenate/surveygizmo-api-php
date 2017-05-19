@@ -3,6 +3,8 @@ PHP wrapper for the SurveyGizmo REST API
 
 ## Installing with Composer:
 
+Add these contents to your `composer.json` file, and then run `composer install`.
+
     {
         "repositories": [
             {
