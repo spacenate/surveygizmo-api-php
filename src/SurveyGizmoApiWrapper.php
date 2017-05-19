@@ -115,7 +115,7 @@ class SurveyGizmoApiWrapper
         // tmhOAuth config
         $oauth_config = array(
             'user_agent'    => 'SurveyGizmo-API-PHP/0.3',
-            'host'          => $this->domain . $this->version
+            'host'          => $this->domain . '/' . $this->version
         );
         $this->oauth = new SurveyGizmo\OAuth($this, $oauth_config);
     }
